@@ -146,8 +146,8 @@ $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRanges.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRange.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/instantList.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/instant.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2FoamSampling/lnInclude/IOsampledSurfaceElevation.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2FoamSampling/lnInclude/sampledSurfaceElevation.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2FoamSampling/lnInclude/IOsampledSurfaceElevation.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2FoamSampling/lnInclude/sampledSurfaceElevation.H \
 $(WM_PROJECT_DIR)/src/sampling/lnInclude/sampledSet.H \
 $(WM_PROJECT_DIR)/src/fileFormats/lnInclude/coordSet.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/pointField.H \
@@ -535,7 +535,7 @@ $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/interpolationNew.C \
 $(WM_PROJECT_DIR)/src/fileFormats/lnInclude/writer.H \
 $(WM_PROJECT_DIR)/src/fileFormats/lnInclude/writer.C \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/OFstream.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2FoamSampling/lnInclude/sampledSurfaceElevationTemplates.C \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2FoamSampling/lnInclude/sampledSurfaceElevationTemplates.C \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/IOOutputFilter.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/IOOutputFilter.C \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/uniformDimensionedFields.H \
@@ -546,6 +546,6 @@ $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/setRootCase.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/createTime.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/createNamedMesh.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/readGravitationalAcceleration.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/readWaveProperties.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/readWaveProperties.H \
 
 

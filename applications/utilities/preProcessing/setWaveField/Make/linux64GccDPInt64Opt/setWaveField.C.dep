@@ -483,8 +483,8 @@ $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvPatchFieldNew.C \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/calculatedFvPatchField.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/calculatedFvPatchField.C \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/calculatedFvPatchFields.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/setWaveField.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/convexPolyhedral.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/setWaveField.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/convexPolyhedral.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/surfaceFields.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/surfaceMesh.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvsPatchFields.H \
@@ -495,14 +495,14 @@ $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/calculatedFvsPatchField.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/calculatedFvsPatchField.C \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvsPatchFieldsFwd.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/calculatedFvsPatchFields.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/localFace.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/localCell.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/localCellNeg.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/waveTheory.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/localFace.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/localCell.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/localCellNeg.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/waveTheory.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/uniformDimensionedFields.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/UniformDimensionedField.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/UniformDimensionedField.C \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/crossVersionCompatibility.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/crossVersionCompatibility.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvCFD.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvc.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fv.H \
@@ -691,13 +691,13 @@ $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/thermodynamicConstants.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/timeSelector.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRanges.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRange.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/externalWaveForcing.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/externalWaveForcing.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/addTimeOptions.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/setRootCase.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/createTime.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/createMesh.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/readGravitationalAcceleration.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/readWaveProperties.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/createExternalWaveForcing.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/readWaveProperties.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/createExternalWaveForcing.H \
 
 

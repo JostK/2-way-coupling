@@ -688,7 +688,7 @@ $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRanges.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRange.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/complex.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/complexI.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2Foam/lnInclude/crossVersionCompatibility.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/crossVersionCompatibility.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/addToRunTimeSelectionTable.H \
 
 

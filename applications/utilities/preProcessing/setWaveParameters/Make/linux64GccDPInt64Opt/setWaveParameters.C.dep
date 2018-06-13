@@ -684,7 +684,7 @@ $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/argListI.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/timeSelector.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRanges.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRange.H \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2FoamProcessing/lnInclude/setWaveProperties.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2FoamProcessing/lnInclude/setWaveProperties.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/setRootCase.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/createTime.H \
 

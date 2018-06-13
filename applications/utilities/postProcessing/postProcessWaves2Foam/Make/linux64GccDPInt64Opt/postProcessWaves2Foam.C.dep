@@ -389,7 +389,7 @@ $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/pointFieldsFwd.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/slicedVolFieldsFwd.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/slicedSurfaceFieldsFwd.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvPatchFvMeshTemplates.C \
-/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/waves2Foam/src/waves2FoamProcessing/lnInclude/postProcessingWaves.H \
+/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/src/waves2FoamProcessing/lnInclude/postProcessingWaves.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvCFD.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvc.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fv.H \
