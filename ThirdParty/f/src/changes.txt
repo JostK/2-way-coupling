@@ -1,0 +1,11 @@
+change: added two types in datatypes.f90
+change: added two variables in globalvariables.f90 
+add: added PreprocessOfDomain.f90
+add: added PreprocessOfPoints.f90
+mv: added folder src/OpenFoam/TwoWayCoupling and moved PreprocessOfDomain an PreprocessOfPoints there.
+change: added PreprocessOfPoints and PreprocessOfDomain in makefile in src/OpenFoam/
+change: added line VPATH += src/OpenFoam/TwoWayCoupling in makefile in src/
+add: added isInBox.f90 and getRelax.f90 as seperate documents
+cange:isInBox and getRelax in makefile in src/OpenFoam/
+add: added WriteEOFtoOCW3D.f90
+change: added WriteEOFtoOCW3D in makefile in src/OpenFoam/
