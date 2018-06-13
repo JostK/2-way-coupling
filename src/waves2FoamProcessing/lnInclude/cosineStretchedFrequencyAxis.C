@@ -1,0 +1,1 @@
+../preProcessing/setWaveProperties/irregular/waveSpectra/frequencyAxis/cosineStretchedFrequencyAxis/cosineStretchedFrequencyAxis.C

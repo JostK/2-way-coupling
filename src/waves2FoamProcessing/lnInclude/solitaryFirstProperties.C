@@ -1,0 +1,1 @@
+../preProcessing/setWaveProperties/solitary/solitaryFirstProperties/solitaryFirstProperties.C

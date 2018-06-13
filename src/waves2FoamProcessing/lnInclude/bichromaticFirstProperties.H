@@ -1,0 +1,1 @@
+../preProcessing/setWaveProperties/irregular/bichromaticFirstProperties/bichromaticFirstProperties.H

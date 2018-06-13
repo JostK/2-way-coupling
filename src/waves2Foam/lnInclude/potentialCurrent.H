@@ -1,0 +1,1 @@
+../waveTheories/current/potentialCurrent/potentialCurrent.H

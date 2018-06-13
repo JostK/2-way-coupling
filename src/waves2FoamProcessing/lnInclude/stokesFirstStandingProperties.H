@@ -1,0 +1,1 @@
+../preProcessing/setWaveProperties/regular/stokesFirstStandingProperties/stokesFirstStandingProperties.H

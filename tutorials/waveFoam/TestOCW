@@ -1,0 +1,8 @@
+#!/bin/bash
+
+rm -r ./testOCW
+cp -r couplingOceanWave3D testOCW
+cd testOCW
+
+source $HOME/OpenFOAM/OpenFOAM-3.0.1/etc/bashrc WM_LABEL_SIZE=64
+./Allrun

@@ -1,0 +1,1 @@
+../preProcessing/setWaveProperties/current/potentialCurrentProperties/potentialCurrentProperties.H
