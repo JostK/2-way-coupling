@@ -32,8 +32,11 @@ END DO
 IF (m > 0) THEN
 	ALLOCATE(OfPoints(m))
 	
-	!Allocate Array for OpenFOAM surface elevation
+	!Allocate Arrays for OpenFOAM
 	ALLOCATE(EOF(m))
+	ALLOCATE(xOfPoints(m))
+	ALLOCATE(yOfPoints(m))
+	nOfPoints = m
 ELSE
 		PRINT*, 'Error: No OCW3D points inside OF-domain found'
 		STOP
@@ -51,6 +54,10 @@ DO i=1, nOfDomains
 				OfPoints(n)%xInd = j
 				OfPoints(n)%yInd = k
 				OfPoints(n)%relax = one
+				
+				!write x and y position of the Points into an Array for OpenFOAM
+				xOfPoints(n) = FineGrid%x(j,k)
+				yOfPoints(n) = FineGrid%y(j,k)
 				
 				DO l=1, SIZE (OfDomains(i)%RelaxZones)
 				!check if Points are in one of the OF-Domains relaxation zones	
@@ -70,9 +77,16 @@ END DO
 
 
 
-!wite for debugging
+!check if number of points found in both loops is the same
+IF (m /= n) THEN
+		PRINT*, 'Error in PreprocessOfDomains.f90: m is not equal to n'
+		STOP
+END IF
 
-IF (.TRUE.)	THEN
+
+
+!wite for debugging
+IF (.FALSE.)	THEN
 
 Open(fileop(14),file='OfPoints.chk',status='unknown')
 

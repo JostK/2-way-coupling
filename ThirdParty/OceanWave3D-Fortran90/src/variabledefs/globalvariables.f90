@@ -126,7 +126,16 @@ TYPE (OfDomain), DIMENSION(:), ALLOCATABLE :: OfDomains
 !JK: Index of all Points inside the OpenFOAM domain with gamma value
 TYPE (OfPoint), DIMENSION(:), ALLOCATABLE :: OfPoints
 
-!JK: OpenFOAM free surface elevation at OfPoints
+!JK: Number of Points inside the OpenFOAM
+INTEGER :: nOfPoints
+
+!JK: x-Position of OfPoints to be read from OpenFOAM
+REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: xOfPoints
+
+!JK: y-Position of OfPoints to be read from OpenFOAM
+REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: yOfPoints
+
+!JK: OpenFOAM free surface elevation at OfPoints to be written by OpenFOAM
 REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: EOF
 
 END MODULE GlobalVariables

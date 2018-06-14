@@ -56,6 +56,9 @@ $(waveTheories)/$(extWF)/externalWaveForcing.C
 $(waveTheories)/$(extWF)/emptyExternal/emptyExternal.C
 $(waveTheories)/$(extWF)/oceanWave3D/oceanWave3D.C
 
+/*JK: SampledSurfaceElevation for two way coupling*/
+$(waveTheories)/$(extWF)/oceanWave3D/sampledSurfaceElevation/sampledSurfaceElevation.C
+
 /* WAVE BOUNDARY CONDITIONS */ 
 fvPatchFields=fvPatchFields
 $(fvPatchFields)/waveAlpha/waveAlphaFvPatchScalarField.C

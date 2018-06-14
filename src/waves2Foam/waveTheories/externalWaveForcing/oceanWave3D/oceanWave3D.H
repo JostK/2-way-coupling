@@ -46,6 +46,9 @@ Author
 #include "crossVersionCompatibility.H"
 #include "setWaveField.H"
 
+#include "IOsampledSurfaceElevation.H"
+#include "sampledSurfaceElevation.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -124,6 +127,12 @@ protected:
         void calculateKinematics();
 
         void writeExternal() const;
+        
+        //JK: Set up sampling sets for tracking of the Solution
+        void setUpSampling();
+        
+        //JK: Sample Solution and write to OceanWave3D
+        void writeToOceanWave3D();
 
 
 public:

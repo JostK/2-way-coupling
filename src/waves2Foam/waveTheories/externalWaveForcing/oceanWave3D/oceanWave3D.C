@@ -40,6 +40,9 @@ extern "C" double __globalvariables_MOD_dt;
 extern "C" int __globalvariables_MOD_tstep;
 extern "C" int __globalvariables_MOD_ic;
 extern "C" int __globalvariables_MOD_nsteps;
+extern "C" int __globalvariables_MOD_nofpoints;
+extern "C" double* __globalvariables_MOD_xofpoints;
+extern "C" double* __globalvariables_MOD_yofpoints;
 extern "C" void oceanwave3dt0setup_();
 extern "C" void oceanwave3dtakeatimestep_();
 extern "C" void closeiofiles_();
@@ -106,6 +109,7 @@ oceanWave3D::oceanWave3D
     OFtoOCW_(tensor::zero),
 
     OCWtoOF_(tensor::zero)
+    
 {
 	if (N_ > 1)
 	{
@@ -218,6 +222,9 @@ oceanWave3D::oceanWave3D
 
 	// Update the OceanWave3D to current time (restart)
 	alignTimes();
+	
+	//JK:
+	setUpSampling();
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -733,6 +740,71 @@ void oceanWave3D::writeExternal() const
     }
 }
 
+//JK: 
+void oceanWave3D::setUpSampling()
+{
+    // Writing the sets file
+    word  vertAxis('y');	//JKTODO this has to be read popperly, OfDomain could be rotated and sealevel diferent
+       
+    autoPtr<OFstream> gauges;
+
+    gauges.reset(new OFstream("Coupling_sets"));
+
+    gauges() << "sets" << nl << token::BEGIN_LIST << nl << incrIndent;
+
+    for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
+    {
+        gauges() << indent << "gauge_" << i << nl << indent
+                 << token::BEGIN_BLOCK << incrIndent << nl;
+        gauges() << indent << "type         face"
+                 << token::END_STATEMENT << nl;
+        gauges() << indent << "axis         " << vertAxis
+                 << token::END_STATEMENT << nl;
+        gauges() << indent << "start        " << token::BEGIN_LIST 
+				 << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+				 << __globalvariables_MOD_yofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+				 << "0" 									//JKTODO this has to be read popperly
+				 << token::END_LIST << token::END_STATEMENT << nl;
+        gauges() << indent << "end          " << token::BEGIN_LIST 
+				 << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+				 << __globalvariables_MOD_yofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+				 << "0.45" 									//JKTODO this has to be read popperly
+				 << token::END_LIST << token::END_STATEMENT << nl;
+        gauges() << indent << "nPoints      100" << token::END_STATEMENT << nl;
+        gauges() << decrIndent << indent << token::END_BLOCK << nl << nl;
+    }
+
+    gauges() << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
+    
+    
+    
+
+}
+
+//JK: 
+void oceanWave3D::writeToOceanWave3D()
+{
+	
+	//instantiate sampledSurfaceElevation
+    fileName dict("couplingSurfaceElevationDict");
+	
+	IOsampledSurfaceElevation sSets_
+    (
+        sampledSurfaceElevation::typeName,
+        mesh_,
+        dict,
+        IOobject::MUST_READ,
+        false
+    );
+	
+	//polyMesh::readUpdateState state = &mesh_.readUpdate(); //JKTODO this has to be fixed for moving meshes
+
+    //sSets_.readUpdate(state); 
+
+    sSets_.write();
+	
+}
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void oceanWave3D::step()
@@ -745,7 +817,10 @@ void oceanWave3D::step()
     // Perform time steps in OceanWave3D until OpenFoam has to be used
     timeStepOceanWave3D();
 	
-	//JK: Write OF-Solution to OCW3D (TODO does this destroy the initialisation?)
+	//JK: Read OF-Solution at OCW3D grid point locations 
+	writeToOceanWave3D();
+	
+	//JK: Write OF-Solution to OCW3D
 	writeeoftoocw3d_();
 	
     // Take a single time step in OceanWave3D and return to OpenFoam
