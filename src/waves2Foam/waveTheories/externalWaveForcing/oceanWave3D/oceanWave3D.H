@@ -90,6 +90,8 @@ protected:
 
         tensor OFtoOCW_;
         tensor OCWtoOF_;
+        
+        IOsampledSurfaceElevation* sSets_;
 
 
     // Protected member functions

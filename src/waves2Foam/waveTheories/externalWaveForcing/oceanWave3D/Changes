@@ -1,2 +1,3 @@
 add: folder sampled surface elevation so the class could be used
 change: changed waves2Foam/Make/files added path to sampled surface elevation
+change: added sampleAndIntegrate Function to sampledSurfaceElevation that works wiyh one input parameter

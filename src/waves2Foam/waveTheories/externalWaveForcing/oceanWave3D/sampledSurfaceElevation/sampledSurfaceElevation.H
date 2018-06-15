@@ -284,7 +284,10 @@ public:
 
         //- Sample and write
         virtual void write();
-
+        
+        //JK: get results and pass them back as scalarField used for two-way coupling to OceanWave3D
+		void sampleIntegrateAndReturn( Field<scalar>& );
+		
         //- Read the sampledSets
         virtual void read(const dictionary&);
 

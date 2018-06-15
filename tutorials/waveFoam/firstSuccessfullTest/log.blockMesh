@@ -1,0 +1,78 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 3.0.1-d8a290b55d28
+Exec   : blockMesh
+Date   : Jun 15 2018
+Time   : 18:38:24
+Host   : "RN1"
+PID    : 7918
+Case   : /home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/tutorials/waveFoam/test
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Creating block mesh from
+    "/home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/tutorials/waveFoam/test/constant/polyMesh/blockMeshDict"
+Creating curved edges
+Creating topology blocks
+Creating topology patches
+
+Reading patches section
+
+Creating block mesh topology
+
+Reading physicalType from existing boundary file
+
+Default patch type set to empty
+
+Check topology
+
+	Basic statistics
+		Number of internal faces : 0
+		Number of boundary faces : 6
+		Number of defined boundary faces : 6
+		Number of undefined boundary faces : 0
+	Checking patch -> block consistency
+
+Creating block offsets
+Creating merge list .
+
+Creating polyMesh from blockMesh
+Creating patches
+Creating cells
+Creating points with scale 1
+    Block 0 cell size :
+        i : 0.0504202 .. 0.0504202
+        j : 0.01 .. 0.01
+        k : 0.1 .. 0.1
+
+
+Writing polyMesh
+----------------
+Mesh Information
+----------------
+  boundingBox: (5 -0.4 0) (23 0.2 0.1)
+  nPoints: 43676
+  nCells: 21420
+  nFaces: 86097
+  nInternalFaces: 42423
+----------------
+Patches
+----------------
+  patch 0 (start: 42423 size: 60) name: inlet
+  patch 1 (start: 42483 size: 357) name: bottom
+  patch 2 (start: 42840 size: 60) name: outlet
+  patch 3 (start: 42900 size: 357) name: atmosphere
+  patch 4 (start: 43257 size: 42840) name: frontBack
+
+End
+

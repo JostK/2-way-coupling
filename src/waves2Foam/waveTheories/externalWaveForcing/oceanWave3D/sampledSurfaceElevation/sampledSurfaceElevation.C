@@ -403,6 +403,21 @@ void Foam::sampledSurfaceElevation::write()
     }
 }
 
+void Foam::sampledSurfaceElevation::sampleIntegrateAndReturn
+( 
+Field<scalar>& result
+)
+{
+	if (size() && checkFieldTypes())
+	{
+		if (scalarFields_.size() && performAction())
+		{
+			sampleAndIntegrate(scalarFields_, result);
+		}
+	}
+	
+}
+
 bool Foam::sampledSurfaceElevation::performAction()
 {
     if (surfaceSampleDeltaT_ <= 10*SMALL)

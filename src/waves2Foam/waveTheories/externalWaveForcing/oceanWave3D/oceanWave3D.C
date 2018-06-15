@@ -43,6 +43,7 @@ extern "C" int __globalvariables_MOD_nsteps;
 extern "C" int __globalvariables_MOD_nofpoints;
 extern "C" double* __globalvariables_MOD_xofpoints;
 extern "C" double* __globalvariables_MOD_yofpoints;
+extern "C" double* __globalvariables_MOD_eof;
 extern "C" void oceanwave3dt0setup_();
 extern "C" void oceanwave3dtakeatimestep_();
 extern "C" void closeiofiles_();
@@ -201,8 +202,6 @@ oceanWave3D::oceanWave3D
 	preprocessofdomains_(&nDomains, RorC, BBoxD, &nRelax, domainNr, BBoxR, param, dir, ftype, XorYorC);
 	preprocessofpoints_();
 	
-	
-	
 	// Initialise the interpolation routine
 	interpolationinitialize_();
 
@@ -219,12 +218,14 @@ oceanWave3D::oceanWave3D
 			<< "OceanWave3D simulation (" << maxDT_*ocwDuration << " s).\n"
 			<< exit(FatalError) << endl << endl;
 	}
-
-	// Update the OceanWave3D to current time (restart)
-	alignTimes();
 	
 	//JK:
 	setUpSampling();
+	
+	// Update the OceanWave3D to current time (restart)
+	alignTimes();
+	
+
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -760,49 +761,63 @@ void oceanWave3D::setUpSampling()
                  << token::END_STATEMENT << nl;
         gauges() << indent << "axis         " << vertAxis
                  << token::END_STATEMENT << nl;
+                 //JK: watch out coordinates are rotated
         gauges() << indent << "start        " << token::BEGIN_LIST 
 				 << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
-				 << __globalvariables_MOD_yofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
-				 << "0" 									//JKTODO this has to be read popperly
+				 << "-0.4" << " "
+				 << "0.05"								 //JKTODO this has to be read popperly
+				 //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
 				 << token::END_LIST << token::END_STATEMENT << nl;
         gauges() << indent << "end          " << token::BEGIN_LIST 
 				 << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
-				 << __globalvariables_MOD_yofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
-				 << "0.45" 									//JKTODO this has to be read popperly
+				 << "0.2" << " "
+				  << "0.05"					 		 //JKTODO this has to be read popperly
+				 //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
 				 << token::END_LIST << token::END_STATEMENT << nl;
         gauges() << indent << "nPoints      100" << token::END_STATEMENT << nl;
         gauges() << decrIndent << indent << token::END_BLOCK << nl << nl;
     }
-
+    
     gauges() << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
-    
-    
-    
-
-}
-
-//JK: 
-void oceanWave3D::writeToOceanWave3D()
-{
 	
+	gauges()().flush();
 	//instantiate sampledSurfaceElevation
     fileName dict("couplingSurfaceElevationDict");
 	
-	IOsampledSurfaceElevation sSets_
+	sSets_ = new IOsampledSurfaceElevation
     (
-        sampledSurfaceElevation::typeName,
+        //sampledSurfaceElevation::typeName,
+        "couplingSurfaceElevation",
         mesh_,
         dict,
         IOobject::MUST_READ,
         false
     );
-	
-	//polyMesh::readUpdateState state = &mesh_.readUpdate(); //JKTODO this has to be fixed for moving meshes
+    
+}
 
-    //sSets_.readUpdate(state); 
+//JK: 
+void oceanWave3D::writeToOceanWave3D()
+{
+	if (Pstream::master())
+	{
+		//polyMesh::readUpdateState state = &mesh_.readUpdate(); //JKTODO this has to be fixed for moving meshes
 
-    sSets_.write();
-	
+		//sSets_.readUpdate(state); 
+
+		scalarField result(0); //maybe make this a member variable
+		sSets_->sampleIntegrateAndReturn(result);
+		//scalar res = result[10];
+		//Info << "HalloHallo: " << result.size() << endl;
+		forAll (result, seti)
+		{
+			//Info << "HalloHallo: " << result[seti] << endl;
+			__globalvariables_MOD_eof[seti] = result[seti];
+		}
+		
+		//JK: Write OF-Solution to OCW3D
+		writeeoftoocw3d_();
+	}
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -819,9 +834,6 @@ void oceanWave3D::step()
 	
 	//JK: Read OF-Solution at OCW3D grid point locations 
 	writeToOceanWave3D();
-	
-	//JK: Write OF-Solution to OCW3D
-	writeeoftoocw3d_();
 	
     // Take a single time step in OceanWave3D and return to OpenFoam
     takeTimeStep(true);
