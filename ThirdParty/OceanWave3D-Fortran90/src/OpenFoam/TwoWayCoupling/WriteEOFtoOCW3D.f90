@@ -16,10 +16,12 @@ DO i=1, SIZE(OfPoints)
 		
 END DO
 
+!Update derivates of Eta for timestepping of FSBC
+CALL DifferentiationsFreeSurfacePlane(Wavefield,GhostGridX,GhostGridY,FineGrid,alpha,beta)
 
 
 !wite for debugging
-IF (.TRUE.)	THEN
+IF (.FALSE.)	THEN
 
 Open(fileop(14),file='EOF.chk',status='unknown')
 

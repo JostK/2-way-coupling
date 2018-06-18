@@ -367,6 +367,60 @@ Foam::sampledSurfaceElevation::sampledSurfaceElevation
 }
 
 
+
+//JK: construct without dict
+Foam::sampledSurfaceElevation::sampledSurfaceElevation
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+:
+    PtrList<sampledSet>(),
+    name_(name),
+    mesh_(refCast<const fvMesh>(obr)),
+    loadFromFiles_(loadFromFiles),
+    outputPath_(fileName::null),
+#if EXTBRANCH==1
+    searchEngine_(mesh_),
+#elif OFPLUSBRANCH==1
+    searchEngine_(mesh_),
+#else
+    #if OFVERSION<210
+        searchEngine_(mesh_, true),
+    #else
+        searchEngine_(mesh_),
+    #endif
+#endif
+
+    fieldNames_(),
+    interpolationScheme_(word::null),
+    writeFormat_(word::null),
+    surfaceElevationFilePtr_( NULL )
+{
+    startTime_ = dict.lookupOrDefault<scalar>("samplingStartTime", 0.0);
+    nextSampleTime_ = startTime_;
+    surfaceSampleDeltaT_ =
+        dict.lookupOrDefault<scalar>("surfaceSampleDeltaT", -1);
+
+    if (Pstream::parRun())
+    {
+        outputPath_ = mesh_.time().path()/".."/name_;
+    }
+    else
+    {
+        outputPath_ = mesh_.time().path()/name_;
+    }
+    if (mesh_.name() != fvMesh::defaultRegion)
+    {
+        outputPath_ = outputPath_/mesh_.name();
+    }
+
+//    mkDir(outputPath_ + "/" + mesh_.time().timeName() );
+
+    read(dict);
+}
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 
