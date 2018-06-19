@@ -24,6 +24,8 @@ $(waveTheories)/$(extWF)/externalWaveForcing.C \
 $(waveTheories)/$(extWF)/emptyExternal/emptyExternal.C \
 $(waveTheories)/$(extWF)/oceanWave3D/oceanWave3D.C \
 $(waveTheories)/$(extWF)/oceanWave3D/sampledSurfaceElevation/sampledSurfaceElevation.C \
+$(waveTheories)/$(extWF)/oceanWave3D/OCWprobes/OCWprobes.C \
+$(waveTheories)/$(extWF)/oceanWave3D/OCWprobes/OCWprobesGrouping.C \
 $(fvPatchFields)/waveAlpha/waveAlphaFvPatchScalarField.C \
 $(fvPatchFields)/waveVelocity/waveVelocityFvPatchVectorField.C \
 $(relaxMethod)/$(relaxShape)/relaxationShape.C \

@@ -109,8 +109,12 @@ oceanWave3D::oceanWave3D
 
     OFtoOCW_(tensor::zero),
 
-    OCWtoOF_(tensor::zero)
+    OCWtoOF_(tensor::zero),
     
+    //JK:
+    OfPoints_(0),
+    
+    indVertCoord_(-GREAT)
 {
 	if (N_ > 1)
 	{
@@ -198,9 +202,19 @@ oceanWave3D::oceanWave3D
 		dir = _dir;
 		ftype = _ftype;
 		XorYorC = _XorYorC;
-		
+	
+	//JK: set up coupling in OceanWave3D and get gridpoints inside OpenFOAM Domain	
 	preprocessofdomains_(&nDomains, RorC, BBoxD, &nRelax, domainNr, BBoxR, param, dir, ftype, XorYorC);
 	preprocessofpoints_();
+
+	for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
+    {
+		//JKTODO: watch out! this has to be done
+		//point p(__globalvariables_MOD_xofpoints[i], __globalvariables_MOD_yofpoints[i], 0.);
+		point p(__globalvariables_MOD_xofpoints[i], 0.05, 0.);
+		p = ( OCWtoOF_ & p ) - translateOFMesh_;
+		OfPoints_.append(p);
+	}
 	
 	// Initialise the interpolation routine
 	interpolationinitialize_();
@@ -284,11 +298,15 @@ void oceanWave3D::mappingTensors()
         {
         	OFtoOCW_.zy() = 1;
         	OFtoOCW_.yz() = 1;
+        	//JK: y is the vertical coordinate
+        	indVertCoord_ = 1;
         }
         else
         {
         	OFtoOCW_.yy() = 1;
         	OFtoOCW_.zz() = 1;
+        	//JK: z is the vertical coordinate
+        	indVertCoord_ = 2;
         }
 	}
 	else
@@ -744,9 +762,11 @@ void oceanWave3D::writeExternal() const
 //JK: 
 void oceanWave3D::setUpSampling()
 {
-    // Writing the sets file
-    word  vertAxis('y');	//JKTODO this has to be read popperly, OfDomain could be rotated and sealevel diferent
-       
+    // Writing the sets file	
+	
+	vector axes('x', 'y' ,'z');
+	word vertAxis(axes[indVertCoord_]);
+      
     autoPtr<OFstream> gauges;
 
     gauges.reset(new OFstream("Coupling_sets"));
@@ -781,19 +801,32 @@ void oceanWave3D::setUpSampling()
     gauges() << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
 	
 	gauges()().flush();
+	
 	//instantiate sampledSurfaceElevation
-    fileName dict("couplingSurfaceElevationDict");
+    fileName Edict("couplingSurfaceElevationDict");
 	
 	sSets_ = new IOsampledSurfaceElevation
     (
         //sampledSurfaceElevation::typeName,
         "couplingSurfaceElevation",
         mesh_,
-        dict,
+        Edict,
         IOobject::MUST_READ,
         false
     );
     
+    
+	fileName Udict("couplingProbesDict");
+	sProbes_ = new IOOCWprobes
+	(
+		//sampledSurfaceElevation::typeName,
+		"couplingProbes",
+		mesh_,
+		Udict,
+		IOobject::MUST_READ,
+		false
+	);
+
 }
 
 //JK: 
@@ -809,14 +842,61 @@ void oceanWave3D::writeToOceanWave3D()
 		sSets_->sampleIntegrateAndReturn(result);
 		//scalar res = result[10];
 		//Info << "HalloHallo: " << result.size() << endl;
+		if (result.size() != __globalvariables_MOD_nofpoints)
+        {
+			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
+            << "Number of obtained surface elevation samples does"<< nl
+            << "not fit with number of evaluated Points" << exit(FatalError);
+        }
+		
+		
 		forAll (result, seti)
 		{
-			//Info << "HalloHallo: " << result[seti] << endl;
-			__globalvariables_MOD_eof[seti] = result[seti];
+			// write surface elevation to OceanWave3D variable respecting the change of coordinate system
+			__globalvariables_MOD_eof[seti] = result[seti] - seaLevel_;
+			// update OfPoints to current surface elevation
+			OfPoints_[seti][indVertCoord_] = result[seti];
 		}
 		
-		//JK: Write OF-Solution to OCW3D
+		sProbes_ -> UpdateProbes(OfPoints_);
+		
+		//Write OF-Solution to OCW3D
 		writeeoftoocw3d_();
+		
+		//~ // writing the probes file
+		//~ autoPtr<OFstream> probes;
+
+		//~ probes.reset(new OFstream("Coupling_probes"));
+
+		//~ probes() << "fields" << nl
+				 //~ << token::BEGIN_LIST << nl
+				 //~ << indent << "U" << nl 
+				 //~ << token::END_LIST << token::END_STATEMENT << nl;
+		//~ probes() << nl << "probeLocations" << nl
+				 //~ << token::BEGIN_LIST << nl;
+				 
+		//~ for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
+		//~ {
+					 //~ //JK: watch out coordinates are rotated
+			//~ probes() << indent << token::BEGIN_LIST 
+					 //~ << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+					 //~ << __globalvariables_MOD_eof[i] << " "
+					 //~ << "0.05"								 //JKTODO this has to be read popperly
+					 //~ //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
+					 //~ << token::END_LIST << nl;
+		//~ }
+		//~ probes() << token::END_LIST << token::END_STATEMENT << nl;
+		//~ probes()().flush();
+		
+		//~ List<point> OfPoints(0);
+		//~ point p(1.,2., 3.);
+		//~ OfPoints.append(p);
+		
+		 //OfPoints >> *sProbes_;
+		
+		Info << "HALLOHALLO: " << sProbes_ -> probeLocations() << endl;
+		
+		sProbes_ -> write();
 	}
 }
 

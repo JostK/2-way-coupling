@@ -7,10 +7,10 @@
 \*---------------------------------------------------------------------------*/
 Build  : 3.0.1-d8a290b55d28
 Exec   : setWaveField
-Date   : Jun 18 2018
-Time   : 11:13:43
+Date   : Jun 19 2018
+Time   : 18:36:03
 Host   : "RN1"
-PID    : 30784
+PID    : 6705
 Case   : /home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/tutorials/2WayCouplingOceanWave3D/test
 nProcs : 1
 sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).

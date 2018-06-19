@@ -46,8 +46,11 @@ Author
 #include "crossVersionCompatibility.H"
 #include "setWaveField.H"
 
+//JK:
 #include "IOsampledSurfaceElevation.H"
 #include "sampledSurfaceElevation.H"
+#include "IOOCWprobes.H"
+#include "OCWprobes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -90,8 +93,11 @@ protected:
 
         tensor OFtoOCW_;
         tensor OCWtoOF_;
-        
+        //JK: Variables for 2-way coupling
         IOsampledSurfaceElevation* sSets_;
+        IOOCWprobes* sProbes_;
+        List<point> OfPoints_;
+        label indVertCoord_; //index of the vertical coordinate in OpenFOAM
 
 
     // Protected member functions
