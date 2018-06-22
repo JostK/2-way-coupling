@@ -16,9 +16,10 @@ SOURCES += $(LDIR)/interpolation.f90
 SOURCES += $(IODIR)/openFoamInterfaceEta.f90
 SOURCES += $(IODIR)/openFoamInterfaceU.f90
 SOURCES += $(IODIR)/writeOceanwave3D.f90
-#
+#JK: Two way coupling functions
 SOURCES += $(TWCDIR)/PreprocessOfPoints.f90
 SOURCES += $(TWCDIR)/PreprocessOfDomains.f90
 SOURCES += $(TWCDIR)/isInBox.f90
 SOURCES += $(TWCDIR)/getRelax.f90
-SOURCES += $(TWCDIR)/WriteEOFtoOCW3D.f90
+SOURCES += $(TWCDIR)/WriteOFtoOCW3D.f90
+SOURCES += $(TWCDIR)/DiffAndIntFreeSurfacePlaneFromOFValues.f90

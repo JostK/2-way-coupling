@@ -44,6 +44,9 @@ extern "C" int __globalvariables_MOD_nofpoints;
 extern "C" double* __globalvariables_MOD_xofpoints;
 extern "C" double* __globalvariables_MOD_yofpoints;
 extern "C" double* __globalvariables_MOD_eof;
+extern "C" double* __globalvariables_MOD_uxof;
+extern "C" double* __globalvariables_MOD_uyof;
+extern "C" double* __globalvariables_MOD_uzof;
 extern "C" void oceanwave3dt0setup_();
 extern "C" void oceanwave3dtakeatimestep_();
 extern "C" void closeiofiles_();
@@ -55,7 +58,7 @@ extern "C" void openfoaminterface_u_(double(*)[3] , double *, double *, double *
 extern "C" void writeoceanwave3d_(int *);
 extern "C" void preprocessofdomains_(const int *,const int *, double*,const  int *,const  int(*), double*,const  double *,const  int *,const  int *,const  int *);
 extern "C" void preprocessofpoints_();
-extern "C" void writeeoftoocw3d_();
+extern "C" void writeoftoocw3d_();
 
 namespace waveTheories
 {
@@ -838,11 +841,11 @@ void oceanWave3D::writeToOceanWave3D()
 
 		//sSets_.readUpdate(state); 
 
-		scalarField result(0); //maybe make this a member variable
-		sSets_->sampleIntegrateAndReturn(result);
+		scalarField EtaResult(0); //JKTODO: maybe make this a member variable
+		sSets_->sampleIntegrateAndReturn(EtaResult);
 		//scalar res = result[10];
 		//Info << "HalloHallo: " << result.size() << endl;
-		if (result.size() != __globalvariables_MOD_nofpoints)
+		if (EtaResult.size() != __globalvariables_MOD_nofpoints)
         {
 			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
             << "Number of obtained surface elevation samples does"<< nl
@@ -850,53 +853,38 @@ void oceanWave3D::writeToOceanWave3D()
         }
 		
 		
-		forAll (result, seti)
+		forAll (EtaResult, seti)
 		{
 			// write surface elevation to OceanWave3D variable respecting the change of coordinate system
-			__globalvariables_MOD_eof[seti] = result[seti] - seaLevel_;
+			__globalvariables_MOD_eof[seti] = EtaResult[seti] - seaLevel_;
 			// update OfPoints to current surface elevation
-			OfPoints_[seti][indVertCoord_] = result[seti];
+			OfPoints_[seti][indVertCoord_] = EtaResult[seti];
 		}
 		
 		sProbes_ -> UpdateProbes(OfPoints_);
 		
+		vectorField UResult(0); //JKTODO: maybe make this a member variable
+		sProbes_ -> sampleAndReturn(UResult);
+		if (UResult.size() != __globalvariables_MOD_nofpoints)
+        {
+			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
+            << "Number of obtained velocity samples does"<< nl
+            << "not fit with number of evaluated Points" << exit(FatalError);
+        }
+		
+		
+		forAll (UResult, seti)
+		{
+			__globalvariables_MOD_uxof[seti] = (OFtoOCW_ & UResult[seti])[0];
+			__globalvariables_MOD_uyof[seti] = (OFtoOCW_ & UResult[seti])[1];
+			__globalvariables_MOD_uzof[seti] = (OFtoOCW_ & UResult[seti])[2];
+		}
+		
+		//Info << "HALLOHALLO: " << Uresult << endl;
+		
 		//Write OF-Solution to OCW3D
-		writeeoftoocw3d_();
+		writeoftoocw3d_();
 		
-		//~ // writing the probes file
-		//~ autoPtr<OFstream> probes;
-
-		//~ probes.reset(new OFstream("Coupling_probes"));
-
-		//~ probes() << "fields" << nl
-				 //~ << token::BEGIN_LIST << nl
-				 //~ << indent << "U" << nl 
-				 //~ << token::END_LIST << token::END_STATEMENT << nl;
-		//~ probes() << nl << "probeLocations" << nl
-				 //~ << token::BEGIN_LIST << nl;
-				 
-		//~ for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
-		//~ {
-					 //~ //JK: watch out coordinates are rotated
-			//~ probes() << indent << token::BEGIN_LIST 
-					 //~ << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
-					 //~ << __globalvariables_MOD_eof[i] << " "
-					 //~ << "0.05"								 //JKTODO this has to be read popperly
-					 //~ //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
-					 //~ << token::END_LIST << nl;
-		//~ }
-		//~ probes() << token::END_LIST << token::END_STATEMENT << nl;
-		//~ probes()().flush();
-		
-		//~ List<point> OfPoints(0);
-		//~ point p(1.,2., 3.);
-		//~ OfPoints.append(p);
-		
-		 //OfPoints >> *sProbes_;
-		
-		Info << "HALLOHALLO: " << sProbes_ -> probeLocations() << endl;
-		
-		sProbes_ -> write();
 	}
 }
 

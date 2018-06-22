@@ -258,6 +258,7 @@ TYPE OfPoint
 	INTEGER					:: xInd			!index in x dierction
 	INTEGER					:: yInd			!index in y dierction
 	REAL(KIND=long)         :: relax		!Relaxation value
+	INTEGER					:: domainNr		!Number of OpenFOAM domain the Point belongs to
 END TYPE OfPoint
 
 END MODULE

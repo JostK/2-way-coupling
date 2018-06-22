@@ -33,10 +33,14 @@ IF (m > 0) THEN
 	ALLOCATE(OfPoints(m))
 	
 	!Allocate Arrays for OpenFOAM
+	ALLOCATE(UxOF(m))
+	ALLOCATE(UyOF(m))
+	ALLOCATE(UzOF(m))
 	ALLOCATE(EOF(m))
 	ALLOCATE(xOfPoints(m))
 	ALLOCATE(yOfPoints(m))
 	nOfPoints = m
+	
 ELSE
 		PRINT*, 'Error: No OCW3D points inside OF-domain found'
 		STOP
@@ -51,6 +55,7 @@ DO i=1, nOfDomains
 			
 				n = n + 1
 				
+				OfPoints(n)%domainNr = i
 				OfPoints(n)%xInd = j
 				OfPoints(n)%yInd = k
 				OfPoints(n)%relax = one

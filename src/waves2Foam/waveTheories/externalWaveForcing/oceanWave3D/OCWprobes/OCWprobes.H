@@ -222,6 +222,9 @@ public:
 	    //JK: functuion to change probe locations
 		void UpdateProbes( const List<point>& );
 		
+		//JK: functuion to sample velocity and return results
+		void sampleAndReturn( Field<vector>& );
+		
         //- Return name of the set of probes
         virtual const word& name() const
         {

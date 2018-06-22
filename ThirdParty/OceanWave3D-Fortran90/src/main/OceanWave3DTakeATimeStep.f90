@@ -59,13 +59,12 @@ SUBROUTINE OceanWave3DTakeATimeStep
      write(fileop(1),*)' The solution looks to be going unstable, aborting here.' 
      write(fileop(1),*)' eta_max =',maxEta,' > 10 h_max =',10*maxh
      write(fileop(1),*)' ********************************************************.' 
-     !JK: do not abord. see what happens
-!~      ! CLOSE OPEN FILES
-!~      CALL CloseIOFiles
-!~      !
-!~      ! DEALLOCATE
-!~      CALL CloseVariables
-!~      stop
+     ! CLOSE OPEN FILES
+     CALL CloseIOFiles
+     !
+     ! DEALLOCATE
+     CALL CloseVariables
+     stop
   END IF
 
   time = time + dt

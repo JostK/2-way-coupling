@@ -120,6 +120,9 @@ TYPE (Interpolation_def) :: Interpolation
 REAL(KIND=dp), DIMENSION(:,:), ALLOCATABLE :: Uneumann
 TYPE (wave3DFluxStruct) :: wave3DFlux
 
+
+
+!JK: variables for two way coupling to OpenFOAM
 !JK: Array of all enclosed OpenFOAM domains with corrisponding relaxations zones
 TYPE (OfDomain), DIMENSION(:), ALLOCATABLE :: OfDomains
 
@@ -135,7 +138,10 @@ REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: xOfPoints
 !JK: y-Position of OfPoints to be read from OpenFOAM
 REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: yOfPoints
 
-!JK: OpenFOAM free surface elevation at OfPoints to be written by OpenFOAM
+!JK: OpenFOAM free surface elevation and velocities at OfPoints to be written by OpenFOAM
 REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: EOF
+REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: UxOF
+REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: UyOF
+REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: UzOF
 
 END MODULE GlobalVariables

@@ -29,6 +29,9 @@ License
 #include "IOmanip.H"
 #include "interpolation.H"
 
+//JK:
+#include <typeinfo>
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -115,6 +118,7 @@ void Foam::OCWprobes::sampleAndWrite
 template<class Type>
 void Foam::OCWprobes::sampleAndWrite(const fieldGroup<Type>& fields)
 {
+	
     forAll(fields, fieldI)
     {
         if (loadFromFiles_)

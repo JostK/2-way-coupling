@@ -300,7 +300,38 @@ void Foam::OCWprobes::UpdateProbes(const List<point>& OfPoints)
 {
 	this -> clear();
 	this -> append(OfPoints);
+	
+	// Initialise cells to sample from supplied locations
+    findElements(mesh_);
 }
+
+//JK: functuion to sample velocity and return results
+void Foam::OCWprobes::sampleAndReturn(Field<vector>& results)
+{
+    if (size() && prepare())
+    {
+		//word Type("vector");
+		objectRegistry::const_iterator iter = mesh_.find(vectorFields_[0]);
+
+		if
+		(
+			iter != objectRegistry::end()
+		 && iter()->type()
+		 == GeometricField<vector, fvPatchField, volMesh>::typeName
+		)
+		{
+		results= sample
+		(
+			mesh_.lookupObject
+			<GeometricField<vector, fvPatchField, volMesh> >
+			(
+				vectorFields_[0]
+			)
+		)();
+		}	
+	}
+}
+
 
 void Foam::OCWprobes::execute()
 {
