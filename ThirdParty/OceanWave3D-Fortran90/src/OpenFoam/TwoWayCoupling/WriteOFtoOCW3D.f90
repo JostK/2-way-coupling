@@ -38,24 +38,24 @@ DO i=1, SIZE(OfPoints)
 	EOFtemp = EOF(i)*OfPoints(i)%relax
 	WaveField%E(OfPoints(i)%xInd, OfPoints(i)%yInd) = EOFtemp + EOCWtemp
 	
-	! write Ux to Px
-	IF (FineGrid%Nx>1) THEN
-		UxOCWtemp = WaveField%Px(OfPoints(i)%xInd, OfPoints(i)%yInd)*(one - OfPoints(i)%relax)
-		UxOFtemp = UxOF(i)*OfPoints(i)%relax
-		WaveField%Px(OfPoints(i)%xInd, OfPoints(i)%yInd) = UxOFtemp + UxOCWtemp
-	END IF
+!~ 	! write Ux to Px
+!~ 	IF (FineGrid%Nx>1) THEN
+!~ 		UxOCWtemp = WaveField%Px(OfPoints(i)%xInd, OfPoints(i)%yInd)*(one - OfPoints(i)%relax)
+!~ 		UxOFtemp = UxOF(i)*OfPoints(i)%relax
+!~ 		WaveField%Px(OfPoints(i)%xInd, OfPoints(i)%yInd) = UxOFtemp + UxOCWtemp
+!~ 	END IF
 	
-	! write Uy to Py
-	IF (FineGrid%Ny>1) THEN
-	UyOCWtemp = WaveField%Py(OfPoints(i)%xInd, OfPoints(i)%yInd)*(one - OfPoints(i)%relax)
-	UyOFtemp = UyOF(i)*OfPoints(i)%relax
-	WaveField%Py(OfPoints(i)%xInd, OfPoints(i)%yInd) = UyOFtemp + UyOCWtemp
-	END IF
+!~ 	! write Uy to Py
+!~ 	IF (FineGrid%Ny>1) THEN
+!~ 	UyOCWtemp = WaveField%Py(OfPoints(i)%xInd, OfPoints(i)%yInd)*(one - OfPoints(i)%relax)
+!~ 	UyOFtemp = UyOF(i)*OfPoints(i)%relax
+!~ 	WaveField%Py(OfPoints(i)%xInd, OfPoints(i)%yInd) = UyOFtemp + UyOCWtemp
+!~ 	END IF
 	
-	! write Uz to W
-	UzOCWtemp = WaveField%W(OfPoints(i)%xInd, OfPoints(i)%yInd)*(one - OfPoints(i)%relax)
-	UzOFtemp = UzOF(i)*OfPoints(i)%relax
-	WaveField%W(OfPoints(i)%xInd, OfPoints(i)%yInd) = UzOFtemp + UzOCWtemp
+!~ 	! write Uz to W
+!~ 	UzOCWtemp = WaveField%W(OfPoints(i)%xInd, OfPoints(i)%yInd)*(one - OfPoints(i)%relax)
+!~ 	UzOFtemp = UzOF(i)*OfPoints(i)%relax
+!~ 	WaveField%W(OfPoints(i)%xInd, OfPoints(i)%yInd) = UzOFtemp + UzOCWtemp
 		
 END DO
 
@@ -76,32 +76,32 @@ Close(fileop(14))
 
 ENDIF
 
-smoothLenth = 5
-CALL OFsmoothing(wavefield%E, FineGrid%Nx+2*GhostGridX, FineGrid%Ny+2*GhostGridY, smoothLenth)
-CALL OFsmoothing(wavefield%Px, FineGrid%Nx+2*GhostGridX, FineGrid%Ny+2*GhostGridY, smoothLenth)
-CALL OFsmoothing(wavefield%W, FineGrid%Nx+2*GhostGridX, FineGrid%Ny+2*GhostGridY, smoothLenth)
+!~ smoothLenth = 5
+!~ CALL OFsmoothing(wavefield%E, FineGrid%Nx+2*GhostGridX, FineGrid%Ny+2*GhostGridY, smoothLenth)
+!~ CALL OFsmoothing(wavefield%Px, FineGrid%Nx+2*GhostGridX, FineGrid%Ny+2*GhostGridY, smoothLenth)
+!~ CALL OFsmoothing(wavefield%W, FineGrid%Nx+2*GhostGridX, FineGrid%Ny+2*GhostGridY, smoothLenth)
 
 
 !Update derivates of Eta (and inegrate new Phi for timestepping of FSBC)ISSWITCHEDOF
-CALL DiffAndIntFreeSurfacePlaneFromOFValues(Wavefield,GhostGridX,GhostGridY,FineGrid,alpha,beta)
+!~ CALL DiffAndIntFreeSurfacePlaneFromOFValues(Wavefield,GhostGridX,GhostGridY,FineGrid,alpha,beta)
 
-CALL rhsFreeSurface3D(time,Wavefield,g,rhsE,rhsP,FineGrid%Nx+2*GhostGridX,FineGrid%Ny+2*GhostGridY)
-Ptemp = Phist + half * dt * (rhsP + k1_Phist) 
+!~ CALL rhsFreeSurface3D(time,Wavefield,g,rhsE,rhsP,FineGrid%Nx+2*GhostGridX,FineGrid%Ny+2*GhostGridY)
+!~ Ptemp = Phist + half * dt * (rhsP + k1_Phist) 
 
-! write Rtemp to P (only inside the OpenFOAM domain)
-DO i=1, SIZE(OfPoints)
+!~ ! write Rtemp to P (only inside the OpenFOAM domain)
+!~ DO i=1, SIZE(OfPoints)
 
-	POCWtemp = WaveField%P(OfPoints(i)%xInd, OfPoints(i)%yInd)*(one - OfPoints(i)%relax)
-	POFtemp = Ptemp(OfPoints(i)%xInd, OfPoints(i)%yInd)*OfPoints(i)%relax
-	WaveField%P(OfPoints(i)%xInd, OfPoints(i)%yInd) = POFtemp + POCWtemp
-END DO
+!~ 	POCWtemp = WaveField%P(OfPoints(i)%xInd, OfPoints(i)%yInd)*(one - OfPoints(i)%relax)
+!~ 	POFtemp = Ptemp(OfPoints(i)%xInd, OfPoints(i)%yInd)*OfPoints(i)%relax
+!~ 	WaveField%P(OfPoints(i)%xInd, OfPoints(i)%yInd) = POFtemp + POCWtemp
+!~ END DO
 
-!Update derivates again after integrating Phi
-CALL DifferentiationsFreeSurfacePlane(Wavefield,GhostGridX,GhostGridY,FineGrid,alpha,beta)
-!-> increases stability (maybe update ghost layers is important)
+!~ !Update derivates again after integrating Phi
+!~ CALL DifferentiationsFreeSurfacePlane(Wavefield,GhostGridX,GhostGridY,FineGrid,alpha,beta)
+!~ !-> increases stability (maybe update ghost layers is important)
 
-!Update WHist
-WaveField%WHist(:,:,1) = WaveField%W(:,:)
+!~ !Update WHist
+!~ WaveField%WHist(:,:,1) = WaveField%W(:,:)
 
 !Update EtatHist -> leads to foating point exeptions
 !WaveField%EtatHist(:,:,1) = (WaveField%E(:,:) - WaveField%EtatHist(:,:,2))/dt
