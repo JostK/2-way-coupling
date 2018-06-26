@@ -4,25 +4,24 @@ SUBROUTINE WriteOFtoOCW3D
 !
 ! By Jost Kemper
 USE GlobalVariables, ONLY: WaveField, OfPoints, EOF, UxOF, UyOF, UzOF, alpha, beta, FineGrid,& 
-						   GhostGridX, GhostGridY, dt, fileop
+						   GhostGridX, GhostGridY, dt, fileop, g, time, Phist, k1_Phist
 USE Precision
 USE Constants
 IMPLICIT NONE
-INTEGER :: i, p
-REAL(KIND=long) :: EOFtemp, EOCWtemp, UxOFtemp, UxOCWtemp, UyOFtemp, UyOCWtemp, UzOFtemp, UzOCWtemp
+INTEGER :: i, p, smoothLenth
+REAL(KIND=long) :: EOFtemp, EOCWtemp, UxOFtemp, UxOCWtemp, UyOFtemp, UyOCWtemp, UzOFtemp, UzOCWtemp, POFtemp, POCWtemp
+REAL(KIND=long), DIMENSION(FineGrid%Nx+2*GhostGridX,FineGrid%Ny+2*GhostGridY) :: rhsE,rhsP, Ptemp
 
-
-
-
-!write old velocities for debugging (2D)
-IF (.FALSE.)	THEN
+!write old velocities/Phi for debugging (2D)
+IF (.TRUE.)	THEN
 
 Open(fileop(11),file='Uold.chk',status='unknown')
 
 DO p=1, SIZE(FineGrid%x) 
 
-			write(fileop(11),*)  FineGrid%x(p,1), Wavefield%Px(p,1), Wavefield%W(p,1)
+			!write(fileop(11),*)  FineGrid%x(p,1), Wavefield%Px(p,1), Wavefield%W(p,1)
 			!WRITE(*,*) EOF(p)
+			write(fileop(11),*)  FineGrid%x(p,1), Wavefield%P(p,1)
 END DO
 
 Close(fileop(11))
@@ -60,12 +59,46 @@ DO i=1, SIZE(OfPoints)
 		
 END DO
 
-!Update derivates of Eta and inegrate new Phi for timestepping of FSBC
+!write new velocities for debugging (2D)
+IF (.FALSE.)	THEN
+
+Open(fileop(14),file='UnewRaw.chk',status='unknown')
+
+DO p=1, SIZE(FineGrid%x) 
+
+			write(fileop(14),*)  FineGrid%x(p,1), Wavefield%Px(p,1), Wavefield%W(p,1)
+			!WRITE(*,*) EOF(p)
+END DO
+
+Close(fileop(14))
+
+!STOP!!!
+
+ENDIF
+
+smoothLenth = 5
+CALL OFsmoothing(wavefield%E, FineGrid%Nx+2*GhostGridX, FineGrid%Ny+2*GhostGridY, smoothLenth)
+CALL OFsmoothing(wavefield%Px, FineGrid%Nx+2*GhostGridX, FineGrid%Ny+2*GhostGridY, smoothLenth)
+CALL OFsmoothing(wavefield%W, FineGrid%Nx+2*GhostGridX, FineGrid%Ny+2*GhostGridY, smoothLenth)
+
+
+!Update derivates of Eta (and inegrate new Phi for timestepping of FSBC)ISSWITCHEDOF
 CALL DiffAndIntFreeSurfacePlaneFromOFValues(Wavefield,GhostGridX,GhostGridY,FineGrid,alpha,beta)
+
+CALL rhsFreeSurface3D(time,Wavefield,g,rhsE,rhsP,FineGrid%Nx+2*GhostGridX,FineGrid%Ny+2*GhostGridY)
+Ptemp = Phist + half * dt * (rhsP + k1_Phist) 
+
+! write Rtemp to P (only inside the OpenFOAM domain)
+DO i=1, SIZE(OfPoints)
+
+	POCWtemp = WaveField%P(OfPoints(i)%xInd, OfPoints(i)%yInd)*(one - OfPoints(i)%relax)
+	POFtemp = Ptemp(OfPoints(i)%xInd, OfPoints(i)%yInd)*OfPoints(i)%relax
+	WaveField%P(OfPoints(i)%xInd, OfPoints(i)%yInd) = POFtemp + POCWtemp
+END DO
 
 !Update derivates again after integrating Phi
 CALL DifferentiationsFreeSurfacePlane(Wavefield,GhostGridX,GhostGridY,FineGrid,alpha,beta)
-
+!-> increases stability (maybe update ghost layers is important)
 
 !Update WHist
 WaveField%WHist(:,:,1) = WaveField%W(:,:)
@@ -95,14 +128,15 @@ Close(fileop(14))
 ENDIF
 
 
-!write new velocities for debugging (2D)
-IF (.FALSE.)	THEN
+!write new velocities/Phi for debugging (2D)
+IF (.TRUE.)	THEN
 
-Open(fileop(15),file='Unew.chk',status='unknown')
+Open(fileop(15),file='UnewSmooth.chk',status='unknown')
 
 DO p=1, SIZE(FineGrid%x) 
 
-			write(fileop(15),*)  FineGrid%x(p,1), Wavefield%Px(p,1), Wavefield%W(p,1)
+			!write(fileop(15),*)  FineGrid%x(p,1), Wavefield%Px(p,1), Wavefield%W(p,1)
+			write(fileop(15),*)  FineGrid%x(p,1), Wavefield%P(p,1)
 			!WRITE(*,*) EOF(p)
 END DO
 

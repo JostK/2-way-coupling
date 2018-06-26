@@ -1,0 +1,1308 @@
+
+*********************************************************
+***                                                   ***
+*** OceanWave3D - a coastal engineering tool for      ***
+*** simulation of nonlinear free surface waves.       ***
+*** Copyright (C) 2009 Allan P. Engsig-Karup.         ***
+***                                                   ***
+*** This OceanWave3D program comes with ABSOLUTELY NO ***
+*** WARRANTY. It is distributed under the conditions  ***
+*** of the GNU General Public License version 3.      ***
+***                                                   ***
+***     Software library developed in 2009 by         ***
+***                                                   ***
+***     Allan P. Engsig-Karup                         ***
+***     Guillaume Ducrozet                            ***
+***                                                   ***
+*** At DTU Informatics                                ***
+***    Scientific Computing Section                   ***
+***    Technical University of Denmark                ***
+***                                                   ***
+***     Original software library written in 2007 by  ***
+***                                                   ***
+***     Allan P. Engsig-Karup                         ***
+***     Harry B. Bingham                              ***
+***                                                   ***
+*** At Department of Mechanical Engineering           ***
+***    Coastal, Maritime and Structural Eng. Section  ***
+***    Technical University of Denmark                ***
+***                                                   ***
+*********************************************************
+
+   Input file with model parameters : OceanWave3D.inp                         
+
+   Header title.................... : Header                                                                  
+
+   PARAMETER INPUT
+
+   Initial Condition (IC), Predefined :   0
+
+   Local filtering downward vertical acceleration limit is: ********
+ * g m/s^2.  Theoretically breaking should occur between 0.5 and 1.
+
+
+   Bathymetry                         : Predefined (in setup for IC)
+   Size of dx: .8016E-01
+
+   The problem is without a y-dimension.
+
+   Uneven node-distribution in Z
+   Ghost point layer included below bottom.
+
+   Half-width stencils: (alpha,beta,gamma)=( 3, 0, 3)
+   Half-width stencils: (alpha,beta,gamma)=( 1, 0, 1) (Preconditioner)
+ Starting time for this run is    0.0000000000000000     
+   Number of time steps chosen:    10000
+   Size of time increment: .1000E-01
+    Time-integration method: Classical Runge-Kutta fourth order
+    GMRES method is chosen.
+    Strategy: GMRES + LU (order            2 )
+    Tolerance levels user-defined. RelTol =    1.0000000000000000E-008  and AbsTol =    9.9999999999999995E-007
+ 
+   Fully nonlinear model is employed.
+
+ No free-surface pressure term is being applied.  
+
+    SG(          13 ,          10 )-filtering will be employed after every            1  time step.
+  
+ No breaking model line found, the feature is off.
+  
+     Total relaxation zones defined:            2
+  
+ Found            0  pressure damping zones.
+   Standard Cartesian model employed.
+
+ FilterInit:  Boundary filtering is turned on with values:
+   8.0000000000000002E-002   8.0000000000000002E-002  0.40000000000000002     
+  
+ Initializing variables and arrays.
+ Relaxation zone setup:
+  Zone  1: idx=(     2,    65,     1,     1)
+  Zone  2: idx=(   289,   501,     1,     1)
+   Relaxation zones have been setup.
+      SF solution: k=   1.6729156711127393      ,h=  0.40000000000000002      ,H=  0.10000000000000001      ,T=   2.0000000000000000      ,L=   100.00000000000000     
+                   kh=  0.66916626844509575      ,c=   50.000000000000000     
+ The incident wave is a stream function wave with L=0.375583E+01
+  T=0.200000E+01 H=0.100000E+00 u_E=-.156747E-01 and u_S=0.000000E+00
+
+
+ setup ICs...
+ IC chosen is case            0
+ Initial condition is still water.
+ done with ICs
+   Preconditioner: DIRECT LU ( 2 order, linear)
+ Building stencils...
+   Preconditioning matrix generated.
+ Determine finite difference stencils for the system matrix...
+ Building stencils...
+ ...done!
+ A total of       28 GMRES iterations done.
+ A total of       14 GMRES iterations done in first time step.
+ An average of     7.00 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        6 iterations per solve
+ A total of       42 GMRES iterations done.
+ A total of       14 GMRES iterations done in first time step.
+ An average of     5.25 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        6 iterations per solve
+ An average of     7.00 GMRES iterations done per solve excluding first time step iteration counts.
+   Minimum no.        1 and maximum no.        6 iterations per solve excluding first time step solves
+ A total of       57 GMRES iterations done.
+ A total of       14 GMRES iterations done in first time step.
+ An average of     4.75 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        7 iterations per solve
+ An average of     5.38 GMRES iterations done per solve excluding first time step iteration counts.
+   Minimum no.        1 and maximum no.        7 iterations per solve excluding first time step solves
+ A total of       72 GMRES iterations done.
+ A total of       14 GMRES iterations done in first time step.
+ An average of     4.50 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        7 iterations per solve
+ An average of     4.83 GMRES iterations done per solve excluding first time step iteration counts.
+   Minimum no.        1 and maximum no.        7 iterations per solve excluding first time step solves
+ A total of       89 GMRES iterations done.
+ A total of       14 GMRES iterations done in first time step.
+ An average of     4.45 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        7 iterations per solve
+ An average of     4.69 GMRES iterations done per solve excluding first time step iteration counts.
+   Minimum no.        1 and maximum no.        7 iterations per solve excluding first time step solves
+ A total of      106 GMRES iterations done.
+ A total of       14 GMRES iterations done in first time step.
+ An average of     4.42 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        7 iterations per solve
+ An average of     4.60 GMRES iterations done per solve excluding first time step iteration counts.
+   Minimum no.        1 and maximum no.        7 iterations per solve excluding first time step solves
+ A total of      123 GMRES iterations done.
+ A total of       14 GMRES iterations done in first time step.
+ An average of     4.39 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        7 iterations per solve
+ An average of     4.54 GMRES iterations done per solve excluding first time step iteration counts.
+   Minimum no.        1 and maximum no.        7 iterations per solve excluding first time step solves
+ A total of      141 GMRES iterations done.
+ A total of       14 GMRES iterations done in first time step.
+ An average of     4.41 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        8 iterations per solve
+ An average of     4.54 GMRES iterations done per solve excluding first time step iteration counts.
+   Minimum no.        1 and maximum no.        8 iterations per solve excluding first time step solves
+   Loop no.       10   Time =    0.0239 sec.
+ time step number           10  t=   2.9569197777794341E-002
+ An average of     4.47 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        8 iterations per solve
+   Loop no.       20   Time =    0.1119 sec.
+ time step number           20  t=  0.12165789454700021     
+ An average of     5.26 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        9 iterations per solve
+   Loop no.       30   Time =    0.2095 sec.
+ time step number           30  t=  0.21904761904761905     
+ An average of     5.63 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        9 iterations per solve
+   Loop no.       40   Time =    0.3048 sec.
+ time step number           40  t=  0.31428571428571439     
+ An average of     5.85 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        9 iterations per solve
+   Loop no.       50   Time =    0.4000 sec.
+ time step number           50  t=  0.40952380952380957     
+ An average of     6.02 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        9 iterations per solve
+   Loop no.       60   Time =    0.4952 sec.
+ time step number           60  t=  0.50476190476190486     
+ An average of     6.14 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        9 iterations per solve
+   Loop no.       70   Time =    0.5905 sec.
+ time step number           70  t=  0.60000000000000009     
+ An average of     6.23 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.        9 iterations per solve
+   Loop no.       80   Time =    0.6900 sec.
+ time step number           80  t=  0.70000000000000018     
+ An average of     6.32 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       10 iterations per solve
+   Loop no.       90   Time =    0.7900 sec.
+ time step number           90  t=  0.80000000000000004     
+ An average of     6.41 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       10 iterations per solve
+   Loop no.      100   Time =    0.8900 sec.
+ time step number          100  t=  0.90000000000000013     
+ An average of     6.52 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       10 iterations per solve
+   Loop no.      110   Time =    0.9900 sec.
+ time step number          110  t=   1.0000000000000000     
+ An average of     6.61 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       10 iterations per solve
+   Loop no.      120   Time =    1.0857 sec.
+ time step number          120  t=   1.0952380952380949     
+ An average of     6.68 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       10 iterations per solve
+   Loop no.      130   Time =    1.1810 sec.
+ time step number          130  t=   1.1904761904761907     
+ An average of     6.76 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       11 iterations per solve
+   Loop no.      140   Time =    1.2800 sec.
+ time step number          140  t=   1.2900000000000003     
+ An average of     6.84 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       11 iterations per solve
+   Loop no.      150   Time =    1.3800 sec.
+ time step number          150  t=   1.3900000000000001     
+ An average of     6.92 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       11 iterations per solve
+   Loop no.      160   Time =    1.4800 sec.
+ time step number          160  t=   1.4900000000000002     
+ An average of     6.99 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       11 iterations per solve
+   Loop no.      170   Time =    1.5800 sec.
+ time step number          170  t=   1.5900000000000003     
+ An average of     7.03 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       11 iterations per solve
+   Loop no.      180   Time =    1.6800 sec.
+ time step number          180  t=   1.6900000000000002     
+ An average of     7.07 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       11 iterations per solve
+   Loop no.      190   Time =    1.7800 sec.
+ time step number          190  t=   1.7900000000000000     
+ An average of     7.12 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       11 iterations per solve
+   Loop no.      200   Time =    1.8800 sec.
+ time step number          200  t=   1.8900000000000001     
+ An average of     7.16 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       11 iterations per solve
+   Loop no.      210   Time =    1.9800 sec.
+ time step number          210  t=   1.9900000000000002     
+ An average of     7.22 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       11 iterations per solve
+   Loop no.      220   Time =    2.0762 sec.
+ time step number          220  t=   2.0857142857142854     
+ An average of     7.28 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      230   Time =    2.1714 sec.
+ time step number          230  t=   2.1809523809523808     
+ An average of     7.36 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      240   Time =    2.2667 sec.
+ time step number          240  t=   2.2761904761904761     
+ An average of     7.43 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      250   Time =    2.3619 sec.
+ time step number          250  t=   2.3714285714285710     
+ An average of     7.49 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      260   Time =    2.4579 sec.
+ time step number          260  t=   2.4673684210526314     
+ An average of     7.52 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      270   Time =    2.5526 sec.
+ time step number          270  t=   2.5621052631578944     
+ An average of     7.54 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      280   Time =    2.6476 sec.
+ time step number          280  t=   2.6571428571428570     
+ An average of     7.57 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      290   Time =    2.7429 sec.
+ time step number          290  t=   2.7523809523809519     
+ An average of     7.61 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      300   Time =    2.8389 sec.
+ time step number          300  t=   2.8484210526315787     
+ An average of     7.65 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      310   Time =    2.9337 sec.
+ time step number          310  t=   2.9431578947368418     
+ An average of     7.70 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      320   Time =    3.0286 sec.
+ time step number          320  t=   3.0380952380952380     
+ An average of     7.75 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      330   Time =    3.1238 sec.
+ time step number          330  t=   3.1333333333333329     
+ An average of     7.80 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      340   Time =    3.2190 sec.
+ time step number          340  t=   3.2285714285714286     
+ An average of     7.84 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      350   Time =    3.3143 sec.
+ time step number          350  t=   3.3238095238095235     
+ An average of     7.88 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      360   Time =    3.4100 sec.
+ time step number          360  t=   3.4199999999999999     
+ An average of     7.91 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      370   Time =    3.5053 sec.
+ time step number          370  t=   3.5147368421052629     
+ An average of     7.94 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       12 iterations per solve
+   Loop no.      380   Time =    3.6000 sec.
+ time step number          380  t=   3.6095238095238096     
+ An average of     7.97 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       13 iterations per solve
+   Loop no.      390   Time =    3.6952 sec.
+ time step number          390  t=   3.7047619047619045     
+ An average of     8.00 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       13 iterations per solve
+   Loop no.      400   Time =    3.7905 sec.
+ time step number          400  t=   3.8000000000000003     
+ An average of     8.03 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       13 iterations per solve
+   Loop no.      410   Time =    3.8863 sec.
+ time step number          410  t=   3.8957894736842102     
+ An average of     8.05 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       13 iterations per solve
+   Loop no.      420   Time =    3.9811 sec.
+ time step number          420  t=   3.9905263157894737     
+ An average of     8.10 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       13 iterations per solve
+   Loop no.      430   Time =    4.0762 sec.
+ time step number          430  t=   4.0857142857142854     
+ An average of     8.16 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      440   Time =    4.1714 sec.
+ time step number          440  t=   4.1809523809523803     
+ An average of     8.22 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      450   Time =    4.2667 sec.
+ time step number          450  t=   4.2761904761904761     
+ An average of     8.28 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      460   Time =    4.3619 sec.
+ time step number          460  t=   4.3714285714285710     
+ An average of     8.32 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      470   Time =    4.4571 sec.
+ time step number          470  t=   4.4666666666666668     
+ An average of     8.35 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      480   Time =    4.5524 sec.
+ time step number          480  t=   4.5619047619047617     
+ An average of     8.38 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      490   Time =    4.6476 sec.
+ time step number          490  t=   4.6571428571428575     
+ An average of     8.41 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      500   Time =    4.7429 sec.
+ time step number          500  t=   4.7523809523809524     
+ An average of     8.44 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      510   Time =    4.8400 sec.
+ time step number          510  t=   4.8494117647058825     
+ An average of     8.47 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      520   Time =    4.9341 sec.
+ time step number          520  t=   4.9435294117647066     
+ An average of     8.51 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      530   Time =    5.0373 sec.
+ time step number          530  t=   5.0520590520590520     
+ An average of     8.55 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      540   Time =    5.1734 sec.
+ time step number          540  t=   5.1867168621377377     
+ An average of     8.59 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      550   Time =    5.3143 sec.
+ time step number          550  t=   5.3285714285714283     
+ An average of     8.64 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      560   Time =    5.4404 sec.
+ time step number          560  t=   5.4549107142857149     
+ An average of     8.68 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      570   Time =    5.5855 sec.
+ time step number          570  t=   5.6000000000000005     
+ An average of     8.71 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      580   Time =    5.7385 sec.
+ time step number          580  t=   5.7538461538461538     
+ An average of     8.75 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       14 iterations per solve
+   Loop no.      590   Time =    5.8923 sec.
+ time step number          590  t=   5.9076923076923080     
+ An average of     8.79 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       15 iterations per solve
+   Loop no.      600   Time =    6.0462 sec.
+ time step number          600  t=   6.0615384615384613     
+ An average of     8.84 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      610   Time =    6.2000 sec.
+ time step number          610  t=   6.2153846153846155     
+ An average of     8.91 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      620   Time =    6.3538 sec.
+ time step number          620  t=   6.3653846153846150     
+ An average of     8.96 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      630   Time =    6.4756 sec.
+ time step number          630  t=   6.4880739795918361     
+ An average of     9.00 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      640   Time =    6.5896 sec.
+ time step number          640  t=   6.6000000000000005     
+ An average of     9.03 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      650   Time =    6.7056 sec.
+ time step number          650  t=   6.7173611111111118     
+ An average of     9.06 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      660   Time =    6.8250 sec.
+ time step number          660  t=   6.8375000000000012     
+ An average of     9.10 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      670   Time =    6.9497 sec.
+ time step number          670  t=   6.9622767857142867     
+ An average of     9.13 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      680   Time =    7.0750 sec.
+ time step number          680  t=   7.0863636363636378     
+ An average of     9.16 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      690   Time =    7.2000 sec.
+ time step number          690  t=   7.2125000000000004     
+ An average of     9.19 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      700   Time =    7.3250 sec.
+ time step number          700  t=   7.3375000000000021     
+ An average of     9.22 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      710   Time =    7.4500 sec.
+ time step number          710  t=   7.4625000000000012     
+ An average of     9.25 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      720   Time =    7.5750 sec.
+ time step number          720  t=   7.5875000000000004     
+ An average of     9.28 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      730   Time =    7.7000 sec.
+ time step number          730  t=   7.7125000000000021     
+ An average of     9.30 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      740   Time =    7.8250 sec.
+ time step number          740  t=   7.8375000000000012     
+ An average of     9.33 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      750   Time =    7.9500 sec.
+ time step number          750  t=   7.9625000000000004     
+ An average of     9.36 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      760   Time =    8.0750 sec.
+ time step number          760  t=   8.0874999999999986     
+ An average of     9.40 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      770   Time =    8.2000 sec.
+ time step number          770  t=   8.2125000000000004     
+ An average of     9.44 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      780   Time =    8.3250 sec.
+ time step number          780  t=   8.3374999999999986     
+ An average of     9.48 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      790   Time =    8.4250 sec.
+ time step number          790  t=   8.4352865397366674     
+ An average of     9.50 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      800   Time =    8.5409 sec.
+ time step number          800  t=   8.5526976729500195     
+ An average of     9.53 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      810   Time =    8.6588 sec.
+ time step number          810  t=   8.6705882352941170     
+ An average of     9.56 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      820   Time =    8.7765 sec.
+ time step number          820  t=   8.7882352941176478     
+ An average of     9.58 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      830   Time =    8.8897 sec.
+ time step number          830  t=   8.9007352941176485     
+ An average of     9.60 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      840   Time =    9.0000 sec.
+ time step number          840  t=   9.0111111111111111     
+ An average of     9.63 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      850   Time =    9.1111 sec.
+ time step number          850  t=   9.1222222222222218     
+ An average of     9.65 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      860   Time =    9.2229 sec.
+ time step number          860  t=   9.2339843750000021     
+ An average of     9.67 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      870   Time =    9.3336 sec.
+ time step number          870  t=   9.3446614583333343     
+ An average of     9.70 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      880   Time =    9.4450 sec.
+ time step number          880  t=   9.4560553633218003     
+ An average of     9.72 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      890   Time =    9.5557 sec.
+ time step number          890  t=   9.5667820069204179     
+ An average of     9.74 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      900   Time =    9.6706 sec.
+ time step number          900  t=   9.6823529411764717     
+ An average of     9.77 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      910   Time =    9.7882 sec.
+ time step number          910  t=   9.8000000000000007     
+ An average of     9.79 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      920   Time =    9.9059 sec.
+ time step number          920  t=   9.9176470588235297     
+ An average of     9.81 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      930   Time =   10.0250 sec.
+ time step number          930  t=   10.037499999999998     
+ An average of     9.84 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      940   Time =   10.1500 sec.
+ time step number          940  t=   10.162500000000001     
+ An average of     9.87 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      950   Time =   10.2750 sec.
+ time step number          950  t=   10.287499999999998     
+ An average of     9.90 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      960   Time =   10.4000 sec.
+ time step number          960  t=   10.412500000000000     
+ An average of     9.93 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      970   Time =   10.5183 sec.
+ time step number          970  t=   10.529999999999999     
+ An average of     9.95 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      980   Time =   10.6353 sec.
+ time step number          980  t=   10.647058823529413     
+ An average of     9.98 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.      990   Time =   10.7529 sec.
+ time step number          990  t=   10.764705882352942     
+ An average of    10.00 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1000   Time =   10.8667 sec.
+ time step number         1000  t=   10.877777777777778     
+ An average of    10.02 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+Writing OceanWave3D.end file, for possible restart.
+Change the file name to OceanWave3D.init and change IC to -1 for a hot start.
+   Loop no.     1010   Time =   10.9778 sec.
+ time step number         1010  t=   10.988888888888889     
+ An average of    10.03 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1020   Time =   11.0889 sec.
+ time step number         1020  t=   11.100000000000000     
+ An average of    10.05 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1030   Time =   11.2000 sec.
+ time step number         1030  t=   11.211111111111112     
+ An average of    10.07 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1040   Time =   11.3111 sec.
+ time step number         1040  t=   11.322222222222223     
+ An average of    10.08 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1050   Time =   11.4222 sec.
+ time step number         1050  t=   11.433333333333334     
+ An average of    10.10 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1060   Time =   11.5333 sec.
+ time step number         1060  t=   11.544444444444444     
+ An average of    10.11 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1070   Time =   11.6444 sec.
+ time step number         1070  t=   11.655555555555557     
+ An average of    10.13 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1080   Time =   11.7506 sec.
+ time step number         1080  t=   11.760493827160495     
+ An average of    10.14 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1090   Time =   11.8551 sec.
+ time step number         1090  t=   11.866253869969039     
+ An average of    10.16 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1100   Time =   11.9666 sec.
+ time step number         1100  t=   11.974922600619193     
+ An average of    10.18 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1110   Time =   12.0638 sec.
+ time step number         1110  t=   12.075170278637771     
+ An average of    10.20 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1120   Time =   12.1773 sec.
+ time step number         1120  t=   12.188651843512524     
+ An average of    10.22 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1130   Time =   12.2889 sec.
+ time step number         1130  t=   12.300000000000001     
+ An average of    10.25 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1140   Time =   12.4000 sec.
+ time step number         1140  t=   12.411764705882353     
+ An average of    10.26 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1150   Time =   12.5176 sec.
+ time step number         1150  t=   12.529411764705882     
+ An average of    10.28 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1160   Time =   12.6353 sec.
+ time step number         1160  t=   12.647058823529413     
+ An average of    10.30 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1170   Time =   12.7510 sec.
+ time step number         1170  t=   12.760784313725491     
+ An average of    10.31 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1180   Time =   12.8551 sec.
+ time step number         1180  t=   12.866253869969039     
+ An average of    10.33 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1190   Time =   12.9666 sec.
+ time step number         1190  t=   12.977708978328172     
+ An average of    10.34 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1200   Time =   13.0547 sec.
+ time step number         1200  t=   13.065850340136056     
+ An average of    10.35 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1210   Time =   13.1609 sec.
+ time step number         1210  t=   13.170654761904764     
+ An average of    10.37 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1220   Time =   13.2632 sec.
+ time step number         1220  t=   13.273684210526314     
+ An average of    10.38 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1230   Time =   13.3684 sec.
+ time step number         1230  t=   13.378947368421052     
+ An average of    10.39 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1240   Time =   13.4737 sec.
+ time step number         1240  t=   13.484210526315787     
+ An average of    10.41 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1250   Time =   13.5789 sec.
+ time step number         1250  t=   13.589473684210528     
+ An average of    10.42 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1260   Time =   13.6846 sec.
+ time step number         1260  t=   13.695061728395059     
+ An average of    10.43 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1270   Time =   13.7895 sec.
+ time step number         1270  t=   13.800000000000001     
+ An average of    10.44 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1280   Time =   13.8947 sec.
+ time step number         1280  t=   13.905263157894733     
+ An average of    10.45 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1290   Time =   14.0000 sec.
+ time step number         1290  t=   14.010526315789473     
+ An average of    10.47 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1300   Time =   14.1070 sec.
+ time step number         1300  t=   14.117327254788554     
+ An average of    10.49 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1310   Time =   14.2111 sec.
+ time step number         1310  t=   14.222222222222223     
+ An average of    10.51 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1320   Time =   14.3179 sec.
+ time step number         1320  t=   14.328205128205129     
+ An average of    10.52 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1330   Time =   14.4222 sec.
+ time step number         1330  t=   14.433333333333334     
+ An average of    10.54 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1340   Time =   14.5333 sec.
+ time step number         1340  t=   14.544444444444444     
+ An average of    10.55 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1350   Time =   14.6444 sec.
+ time step number         1350  t=   14.655555555555557     
+ An average of    10.57 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1360   Time =   14.7556 sec.
+ time step number         1360  t=   14.766666666666667     
+ An average of    10.58 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1370   Time =   14.8676 sec.
+ time step number         1370  t=   14.878676470588239     
+ An average of    10.60 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1380   Time =   14.9779 sec.
+ time step number         1380  t=   14.988970588235293     
+ An average of    10.61 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1390   Time =   15.0889 sec.
+ time step number         1390  t=   15.100000000000000     
+ An average of    10.62 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1400   Time =   15.2000 sec.
+ time step number         1400  t=   15.211111111111112     
+ An average of    10.63 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1410   Time =   15.3071 sec.
+ time step number         1410  t=   15.317460317460318     
+ An average of    10.64 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1420   Time =   15.4105 sec.
+ time step number         1420  t=   15.421052631578947     
+ An average of    10.65 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1430   Time =   15.5158 sec.
+ time step number         1430  t=   15.526315789473681     
+ An average of    10.66 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1440   Time =   15.6211 sec.
+ time step number         1440  t=   15.631578947368421     
+ An average of    10.67 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1450   Time =   15.7263 sec.
+ time step number         1450  t=   15.736842105263156     
+ An average of    10.68 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1460   Time =   15.8316 sec.
+ time step number         1460  t=   15.842105263157894     
+ An average of    10.69 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1470   Time =   15.9368 sec.
+ time step number         1470  t=   15.947368421052630     
+ An average of    10.70 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1480   Time =   16.0421 sec.
+ time step number         1480  t=   16.052631578947366     
+ An average of    10.71 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1490   Time =   16.1439 sec.
+ time step number         1490  t=   16.153216374269000     
+ An average of    10.73 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1500   Time =   16.2417 sec.
+ time step number         1500  t=   16.252222222222223     
+ An average of    10.75 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1510   Time =   16.3472 sec.
+ time step number         1510  t=   16.357777777777777     
+ An average of    10.76 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1520   Time =   16.4526 sec.
+ time step number         1520  t=   16.463157894736842     
+ An average of    10.78 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1530   Time =   16.5579 sec.
+ time step number         1530  t=   16.568421052631578     
+ An average of    10.79 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1540   Time =   16.6667 sec.
+ time step number         1540  t=   16.677777777777777     
+ An average of    10.80 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1550   Time =   16.7694 sec.
+ time step number         1550  t=   16.779629629629632     
+ An average of    10.81 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1560   Time =   16.8778 sec.
+ time step number         1560  t=   16.888888888888889     
+ An average of    10.82 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1570   Time =   16.9889 sec.
+ time step number         1570  t=   17.000000000000000     
+ An average of    10.83 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1580   Time =   17.1000 sec.
+ time step number         1580  t=   17.111111111111111     
+ An average of    10.84 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1590   Time =   17.2111 sec.
+ time step number         1590  t=   17.222222222222225     
+ An average of    10.85 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1600   Time =   17.3198 sec.
+ time step number         1600  t=   17.329800569800572     
+ An average of    10.86 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1610   Time =   17.4211 sec.
+ time step number         1610  t=   17.431578947368422     
+ An average of    10.87 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1620   Time =   17.5263 sec.
+ time step number         1620  t=   17.536842105263155     
+ An average of    10.88 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1630   Time =   17.6316 sec.
+ time step number         1630  t=   17.642105263157895     
+ An average of    10.88 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1640   Time =   17.7368 sec.
+ time step number         1640  t=   17.747368421052627     
+ An average of    10.89 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1650   Time =   17.8264 sec.
+ time step number         1650  t=   17.836586546580357     
+ An average of    10.90 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1660   Time =   17.9251 sec.
+ time step number         1660  t=   17.934464396284827     
+ An average of    10.91 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1670   Time =   18.0206 sec.
+ time step number         1670  t=   18.031111111111112     
+ An average of    10.92 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1680   Time =   18.1212 sec.
+ time step number         1680  t=   18.131037037037043     
+ An average of    10.94 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1690   Time =   18.2211 sec.
+ time step number         1690  t=   18.231578947368419     
+ An average of    10.95 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1700   Time =   18.3263 sec.
+ time step number         1700  t=   18.336842105263152     
+ An average of    10.96 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1710   Time =   18.4316 sec.
+ time step number         1710  t=   18.442105263157895     
+ An average of    10.98 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1720   Time =   18.5312 sec.
+ time step number         1720  t=   18.541052631578946     
+ An average of    10.99 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1730   Time =   18.6305 sec.
+ time step number         1730  t=   18.640443213296400     
+ An average of    11.00 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1740   Time =   18.7309 sec.
+ time step number         1740  t=   18.740736050652949     
+ An average of    11.01 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1750   Time =   18.8300 sec.
+ time step number         1750  t=   18.840625000000006     
+ An average of    11.01 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1760   Time =   18.9339 sec.
+ time step number         1760  t=   18.943333333333339     
+ An average of    11.02 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1770   Time =   19.0311 sec.
+ time step number         1770  t=   19.041666666666668     
+ An average of    11.03 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1780   Time =   19.1318 sec.
+ time step number         1780  t=   19.141538461538460     
+ An average of    11.03 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1790   Time =   19.2316 sec.
+ time step number         1790  t=   19.242105263157896     
+ An average of    11.04 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1800   Time =   19.3368 sec.
+ time step number         1800  t=   19.347368421052629     
+ An average of    11.05 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1810   Time =   19.4421 sec.
+ time step number         1810  t=   19.452631578947368     
+ An average of    11.05 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1820   Time =   19.5474 sec.
+ time step number         1820  t=   19.557894736842101     
+ An average of    11.06 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1830   Time =   19.6520 sec.
+ time step number         1830  t=   19.661842105263155     
+ An average of    11.07 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1840   Time =   19.7507 sec.
+ time step number         1840  t=   19.760526315789473     
+ An average of    11.07 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1850   Time =   19.8526 sec.
+ time step number         1850  t=   19.863157894736840     
+ An average of    11.08 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1860   Time =   19.9579 sec.
+ time step number         1860  t=   19.968421052631577     
+ An average of    11.09 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1870   Time =   20.0632 sec.
+ time step number         1870  t=   20.073684210526313     
+ An average of    11.10 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1880   Time =   20.1626 sec.
+ time step number         1880  t=   20.171929824561403     
+ An average of    11.11 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1890   Time =   20.2628 sec.
+ time step number         1890  t=   20.273333333333337     
+ An average of    11.13 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1900   Time =   20.3683 sec.
+ time step number         1900  t=   20.378888888888891     
+ An average of    11.14 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1910   Time =   20.4570 sec.
+ time step number         1910  t=   20.467226569096542     
+ An average of    11.15 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1920   Time =   20.5591 sec.
+ time step number         1920  t=   20.569359977483821     
+ An average of    11.16 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1930   Time =   20.6600 sec.
+ time step number         1930  t=   20.670000000000002     
+ An average of    11.17 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1940   Time =   20.7600 sec.
+ time step number         1940  t=   20.770000000000003     
+ An average of    11.17 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1950   Time =   20.8600 sec.
+ time step number         1950  t=   20.869333333333337     
+ An average of    11.18 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1960   Time =   20.9539 sec.
+ time step number         1960  t=   20.963127572016468     
+ An average of    11.18 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1970   Time =   21.0500 sec.
+ time step number         1970  t=   21.060000000000006     
+ An average of    11.19 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1980   Time =   21.1500 sec.
+ time step number         1980  t=   21.160000000000004     
+ An average of    11.20 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     1990   Time =   21.2526 sec.
+ time step number         1990  t=   21.262456140350878     
+ An average of    11.20 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2000   Time =   21.3509 sec.
+ time step number         2000  t=   21.360701754385964     
+ An average of    11.21 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+Writing OceanWave3D.end file, for possible restart.
+Change the file name to OceanWave3D.init and change IC to -1 for a hot start.
+   Loop no.     2010   Time =   21.4500 sec.
+ time step number         2010  t=   21.460000000000004     
+ An average of    11.21 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2020   Time =   21.5500 sec.
+ time step number         2020  t=   21.560000000000002     
+ An average of    11.22 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2030   Time =   21.6504 sec.
+ time step number         2030  t=   21.660387811634351     
+ An average of    11.23 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2040   Time =   21.7444 sec.
+ time step number         2040  t=   21.753700039572614     
+ An average of    11.23 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2050   Time =   21.8400 sec.
+ time step number         2050  t=   21.850000000000001     
+ An average of    11.24 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2060   Time =   21.9400 sec.
+ time step number         2060  t=   21.950000000000003     
+ An average of    11.24 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2070   Time =   22.0284 sec.
+ time step number         2070  t=   22.038454106280192     
+ An average of    11.25 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2080   Time =   22.1293 sec.
+ time step number         2080  t=   22.139420289855071     
+ An average of    11.26 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2090   Time =   22.2300 sec.
+ time step number         2090  t=   22.240000000000006     
+ An average of    11.27 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2100   Time =   22.3300 sec.
+ time step number         2100  t=   22.340000000000003     
+ An average of    11.28 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2110   Time =   22.4300 sec.
+ time step number         2110  t=   22.440000000000005     
+ An average of    11.29 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2120   Time =   22.5267 sec.
+ time step number         2120  t=   22.535833333333329     
+ An average of    11.30 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2130   Time =   22.6200 sec.
+ time step number         2130  t=   22.630000000000003     
+ An average of    11.31 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2140   Time =   22.7175 sec.
+ time step number         2140  t=   22.726666666666667     
+ An average of    11.32 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2150   Time =   22.8095 sec.
+ time step number         2150  t=   22.819548872180452     
+ An average of    11.32 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2160   Time =   22.9069 sec.
+ time step number         2160  t=   22.916219119226643     
+ An average of    11.33 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2170   Time =   23.0000 sec.
+ time step number         2170  t=   23.010000000000002     
+ An average of    11.33 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2180   Time =   23.1000 sec.
+ time step number         2180  t=   23.110000000000007     
+ An average of    11.33 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2190   Time =   23.2000 sec.
+ time step number         2190  t=   23.210526315789476     
+ An average of    11.34 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2200   Time =   23.3003 sec.
+ time step number         2200  t=   23.310249307479229     
+ An average of    11.35 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2210   Time =   23.4000 sec.
+ time step number         2210  t=   23.410000000000004     
+ An average of    11.35 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2220   Time =   23.4958 sec.
+ time step number         2220  t=   23.505263157894742     
+ An average of    11.36 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2230   Time =   23.5905 sec.
+ time step number         2230  t=   23.600000000000001     
+ An average of    11.36 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2240   Time =   23.6857 sec.
+ time step number         2240  t=   23.695238095238096     
+ An average of    11.37 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2250   Time =   23.7810 sec.
+ time step number         2250  t=   23.790476190476191     
+ An average of    11.37 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2260   Time =   23.8775 sec.
+ time step number         2260  t=   23.886895810955963     
+ An average of    11.38 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2270   Time =   23.9717 sec.
+ time step number         2270  t=   23.981149301825994     
+ An average of    11.38 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2280   Time =   24.0700 sec.
+ time step number         2280  t=   24.080000000000005     
+ An average of    11.39 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2290   Time =   24.1644 sec.
+ time step number         2290  t=   24.173333333333339     
+ An average of    11.40 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2300   Time =   24.2596 sec.
+ time step number         2300  t=   24.269674185463661     
+ An average of    11.41 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2310   Time =   24.3541 sec.
+ time step number         2310  t=   24.363241436925652     
+ An average of    11.41 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2320   Time =   24.4482 sec.
+ time step number         2320  t=   24.458333333333332     
+ An average of    11.42 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2330   Time =   24.5494 sec.
+ time step number         2330  t=   24.559523809523810     
+ An average of    11.43 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2340   Time =   24.6362 sec.
+ time step number         2340  t=   24.645855379188710     
+ An average of    11.43 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2350   Time =   24.7326 sec.
+ time step number         2350  t=   24.742195767195760     
+ An average of    11.44 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2360   Time =   24.8300 sec.
+ time step number         2360  t=   24.840000000000003     
+ An average of    11.45 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2370   Time =   24.9300 sec.
+ time step number         2370  t=   24.940000000000001     
+ An average of    11.45 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2380   Time =   25.0300 sec.
+ time step number         2380  t=   25.040000000000006     
+ An average of    11.46 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2390   Time =   25.1273 sec.
+ time step number         2390  t=   25.136363636363637     
+ An average of    11.46 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2400   Time =   25.2190 sec.
+ time step number         2400  t=   25.228571428571431     
+ An average of    11.46 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2410   Time =   25.3143 sec.
+ time step number         2410  t=   25.323809523809526     
+ An average of    11.47 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2420   Time =   25.4095 sec.
+ time step number         2420  t=   25.419047619047621     
+ An average of    11.47 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2430   Time =   25.5048 sec.
+ time step number         2430  t=   25.514285714285716     
+ An average of    11.47 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2440   Time =   25.6000 sec.
+ time step number         2440  t=   25.609523809523811     
+ An average of    11.48 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2450   Time =   25.6952 sec.
+ time step number         2450  t=   25.704761904761906     
+ An average of    11.48 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2460   Time =   25.7905 sec.
+ time step number         2460  t=   25.800000000000001     
+ An average of    11.49 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2470   Time =   25.8857 sec.
+ time step number         2470  t=   25.895238095238096     
+ An average of    11.49 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2480   Time =   25.9810 sec.
+ time step number         2480  t=   25.990476190476191     
+ An average of    11.50 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2490   Time =   26.0800 sec.
+ time step number         2490  t=   26.090000000000003     
+ An average of    11.50 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2500   Time =   26.1800 sec.
+ time step number         2500  t=   26.190000000000005     
+ An average of    11.51 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2510   Time =   26.2765 sec.
+ time step number         2510  t=   26.285999999999998     
+ An average of    11.52 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2520   Time =   26.3715 sec.
+ time step number         2520  t=   26.381000000000000     
+ An average of    11.53 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2530   Time =   26.4704 sec.
+ time step number         2530  t=   26.480332409972302     
+ An average of    11.54 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2540   Time =   26.5637 sec.
+ time step number         2540  t=   26.572802820448249     
+ An average of    11.54 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2550   Time =   26.6575 sec.
+ time step number         2550  t=   26.667036011080334     
+ An average of    11.55 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2560   Time =   26.7493 sec.
+ time step number         2560  t=   26.757789209866779     
+ An average of    11.55 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2570   Time =   26.8377 sec.
+ time step number         2570  t=   26.847869318181818     
+ An average of    11.56 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2580   Time =   26.9391 sec.
+ time step number         2580  t=   26.949289772727276     
+ An average of    11.56 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2590   Time =   27.0400 sec.
+ time step number         2590  t=   27.050000000000004     
+ An average of    11.57 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2600   Time =   27.1400 sec.
+ time step number         2600  t=   27.150000000000006     
+ An average of    11.57 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2610   Time =   27.2400 sec.
+ time step number         2610  t=   27.250000000000007     
+ An average of    11.58 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2620   Time =   27.3350 sec.
+ time step number         2620  t=   27.344285714285711     
+ An average of    11.58 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2630   Time =   27.4286 sec.
+ time step number         2630  t=   27.438095238095240     
+ An average of    11.58 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2640   Time =   27.5253 sec.
+ time step number         2640  t=   27.534615384615378     
+ An average of    11.59 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2650   Time =   27.6200 sec.
+ time step number         2650  t=   27.630000000000003     
+ An average of    11.59 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2660   Time =   27.7164 sec.
+ time step number         2660  t=   27.725714285714282     
+ An average of    11.59 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2670   Time =   27.8095 sec.
+ time step number         2670  t=   27.819047619047620     
+ An average of    11.60 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2680   Time =   27.9048 sec.
+ time step number         2680  t=   27.914285714285715     
+ An average of    11.60 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2690   Time =   28.0000 sec.
+ time step number         2690  t=   28.010000000000002     
+ An average of    11.60 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2700   Time =   28.0979 sec.
+ time step number         2700  t=   28.107142857142861     
+ An average of    11.61 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2710   Time =   28.1907 sec.
+ time step number         2710  t=   28.200000000000003     
+ An average of    11.62 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2720   Time =   28.2900 sec.
+ time step number         2720  t=   28.300000000000004     
+ An average of    11.63 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2730   Time =   28.3825 sec.
+ time step number         2730  t=   28.391249999999999     
+ An average of    11.64 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2740   Time =   28.4762 sec.
+ time step number         2740  t=   28.485714285714288     
+ An average of    11.64 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2750   Time =   28.5714 sec.
+ time step number         2750  t=   28.580952380952382     
+ An average of    11.65 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2760   Time =   28.6667 sec.
+ time step number         2760  t=   28.676190476190477     
+ An average of    11.65 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2770   Time =   28.7619 sec.
+ time step number         2770  t=   28.771428571428572     
+ An average of    11.66 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2780   Time =   28.8457 sec.
+ time step number         2780  t=   28.855311004784692     
+ An average of    11.66 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2790   Time =   28.9421 sec.
+ time step number         2790  t=   28.951770334928234     
+ An average of    11.66 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2800   Time =   29.0392 sec.
+ time step number         2800  t=   29.049206349206347     
+ An average of    11.67 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2810   Time =   29.1355 sec.
+ time step number         2810  t=   29.144708994708989     
+ An average of    11.67 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2820   Time =   29.2286 sec.
+ time step number         2820  t=   29.238095238095241     
+ An average of    11.67 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2830   Time =   29.3238 sec.
+ time step number         2830  t=   29.333333333333336     
+ An average of    11.68 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2840   Time =   29.4190 sec.
+ time step number         2840  t=   29.428571428571431     
+ An average of    11.68 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2850   Time =   29.5143 sec.
+ time step number         2850  t=   29.523809523809526     
+ An average of    11.68 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2860   Time =   29.6095 sec.
+ time step number         2860  t=   29.619047619047620     
+ An average of    11.69 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2870   Time =   29.7048 sec.
+ time step number         2870  t=   29.714285714285715     
+ An average of    11.69 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2880   Time =   29.8000 sec.
+ time step number         2880  t=   29.809523809523810     
+ An average of    11.69 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2890   Time =   29.8968 sec.
+ time step number         2890  t=   29.906172839506176     
+ An average of    11.70 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve
+   Loop no.     2900   Time =   29.9906 sec.
+ time step number         2900  t=   30.000000000000000     
+ An average of    11.70 GMRES iterations done per solve.
+   Minimum no.        1 and maximum no.       16 iterations per solve

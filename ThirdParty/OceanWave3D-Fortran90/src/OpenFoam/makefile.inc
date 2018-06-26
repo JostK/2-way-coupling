@@ -23,3 +23,4 @@ SOURCES += $(TWCDIR)/isInBox.f90
 SOURCES += $(TWCDIR)/getRelax.f90
 SOURCES += $(TWCDIR)/WriteOFtoOCW3D.f90
 SOURCES += $(TWCDIR)/DiffAndIntFreeSurfacePlaneFromOFValues.f90
+SOURCES += $(TWCDIR)/OFsmoothing.f90

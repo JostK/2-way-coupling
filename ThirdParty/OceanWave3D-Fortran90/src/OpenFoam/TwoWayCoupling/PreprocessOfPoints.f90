@@ -39,6 +39,8 @@ IF (m > 0) THEN
 	ALLOCATE(EOF(m))
 	ALLOCATE(xOfPoints(m))
 	ALLOCATE(yOfPoints(m))
+	ALLOCATE(Phist(FineGrid%Nx+2*GhostGridX,FineGrid%Ny+2*GhostGridY))
+	ALLOCATE(k1_Phist(FineGrid%Nx+2*GhostGridX,FineGrid%Ny+2*GhostGridY))
 	nOfPoints = m
 	
 ELSE

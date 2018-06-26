@@ -7,7 +7,7 @@ SUBROUTINE Runge_Kutta_4(rhsFreeSurface)
        RHS, relaxONOFF, LASTPHI, tstep, extrapolationONOFF, LinearONOFF, filteringONOFF, &
        filterALPHA, filterNP, filtercoefficients, GhostGridX, GhostGridY,                &
        swenseONOFF, swenseDir, SFsol, Wavefield , curvilinearONOFF, Wavefield_tmp,       &
-       filtercoefficients2, BreakMod, fileop, IncWaveType, Uneumann
+       filtercoefficients2, BreakMod, fileop, IncWaveType, Uneumann, Phist, k1_Phist !JK: added Phist and k1_Phist
   IMPLICIT NONE
   !
   EXTERNAL rhsFreeSurface, BuildLinearSystem, BuildLinearSystemTransformedCurvilinear, DiffXEven, DiffYEven, FILTERING, &
@@ -55,6 +55,16 @@ SUBROUTINE Runge_Kutta_4(rhsFreeSurface)
   IF (BreakMod%i_breaking>0 .and. FineGrid%ny==1) THEN
      CALL detect_breaking(fileop(14),FineGrid%Nx+2*GhostGridX,Wavefield,0)
   END IF
+  
+  
+  
+  !JK: save old Phi at free surface
+  Phist = Wavefield%P
+  
+  
+  
+  
+  
   !
   ! Build the FSBC right hand sides
   !
@@ -328,6 +338,16 @@ SUBROUTINE Runge_Kutta_4(rhsFreeSurface)
   Wavefield%E    = Wavefield%E + dt/six*(k1_E+two*k2_E+two*k3_E+k4_E)
   Wavefield%P    = Wavefield%P + dt/six*(k1_P+two*k2_P+two*k3_P+k4_P)
   RKtime = time+dt
+  
+  
+  
+  
+  !JK: save k1_P for 2-way coupling to OpenFOAM
+  k1_Phist = k1_P
+  
+  
+  
+  
 
   ! Filtering
   IF (filteringONOFF>0) THEN

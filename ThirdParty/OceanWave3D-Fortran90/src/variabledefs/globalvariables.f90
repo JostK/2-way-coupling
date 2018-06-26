@@ -144,4 +144,10 @@ REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: UxOF
 REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: UyOF
 REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: UzOF
 
+! JK: free surface Phi at last timestep
+REAL(KIND=long), DIMENSION(:,:), ALLOCATABLE :: Phist
+
+! JK: time derivate of Phi at last Timestep
+REAL(KIND=long), DIMENSION(:,:), ALLOCATABLE :: k1_Phist
+
 END MODULE GlobalVariables
