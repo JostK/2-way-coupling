@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rm -r ./test
-cp -r 02*/ test
+cp -r 04*/ test
 
 cd test
 

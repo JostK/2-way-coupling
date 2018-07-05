@@ -1,0 +1,46 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Set application name
+application=`getApplication`
+runRefineMesh ()
+{
+    echo "Running refineMesh on $PWD"
+    refineMesh -dict system/refineMeshDict > log.refineMesh 2>&1
+}
+runApplication setWaveParameters
+runApplication blockMesh
+
+
+i=1
+if [ -f log.topoSet ] ; then # -f true if file exists
+   i=6
+fi
+while [ "$i" -lt 6 ] ; do # -lt is less then (strictly)
+    if [ -f log.topoSet ] ; then
+        mv log.topoSet log.topoSet.1
+    fi
+    
+    cp system/topoSetDict.${i} system/topoSetDict
+    runApplication topoSet
+    #if [ "$i" -lt 4 ] ; then
+    cp system/refineMeshDict.${i} system/refineMeshDict
+    #else 
+	#cp system/refineMeshDict.2 system/refineMeshDict
+    #fi
+    runRefineMesh
+    cp -r 0.02/polyMesh/* constant/polyMesh
+    rm -rf 0.02
+    i=`expr $i + 1`
+done
+
+cp -r 0.org 0 > /dev/null 2>&1
+#runApplication snappyHexMesh -overwrite
+runApplication setWaveField
+#runApplication decomposePar
+echo "runing waveFoam"
+#mpirun -np 6 waveFoam -parallel > log.waveFoam
+runApplication waveFoam

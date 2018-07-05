@@ -40,13 +40,6 @@ extern "C" double __globalvariables_MOD_dt;
 extern "C" int __globalvariables_MOD_tstep;
 extern "C" int __globalvariables_MOD_ic;
 extern "C" int __globalvariables_MOD_nsteps;
-extern "C" int __globalvariables_MOD_nofpoints;
-extern "C" double* __globalvariables_MOD_xofpoints;
-extern "C" double* __globalvariables_MOD_yofpoints;
-extern "C" double* __globalvariables_MOD_eof;
-extern "C" double* __globalvariables_MOD_uxof;
-extern "C" double* __globalvariables_MOD_uyof;
-extern "C" double* __globalvariables_MOD_uzof;
 extern "C" void oceanwave3dt0setup_();
 extern "C" void oceanwave3dtakeatimestep_();
 extern "C" void closeiofiles_();
@@ -56,9 +49,7 @@ extern "C" void calculatekinematics_();
 extern "C" void openfoaminterface_eta_(double(*)[3] , double *);
 extern "C" void openfoaminterface_u_(double(*)[3] , double *, double *, double *);
 extern "C" void writeoceanwave3d_(int *);
-extern "C" void preprocessofdomains_(const int *,const int *, double*,const  int *,const  int(*), double*,const  double *,const  int *,const  int *,const  int *);
-extern "C" void preprocessofpoints_();
-extern "C" void writeoftoocw3d_();
+
 
 namespace waveTheories
 {
@@ -112,12 +103,7 @@ oceanWave3D::oceanWave3D
 
     OFtoOCW_(tensor::zero),
 
-    OCWtoOF_(tensor::zero),
-    
-    //JK:
-    OfPoints_(0),
-    
-    indVertCoord_(-GREAT)
+    OCWtoOF_(tensor::zero)
 {
 	if (N_ > 1)
 	{
@@ -169,56 +155,7 @@ oceanWave3D::oceanWave3D
 
 	// Start OceanWave3D
 	oceanwave3dt0setup_();
-	
-	
-	
-	// JK: Initialize 2-way coupling
-	// PreprocessOfDomains(nDomains, RorC, BBoxD, nRelax, domainNr, BBoxR, param, dir, ftype, XorYorC)
-	// PreprocessOfDomains_(int *, char *, double(*)[4], int *, int *, double(*)[4], double *, int *, int *, char *);
-		const int nDomains = 1;
-		const int _RorC[1] = {1}; //1 means rectangular, 2 means circular
-		double _BBoxD[4] = {5.0, 23.0, -0.4, 0.2};
-		const int nRelax = 2;
-		const int _domainNr[2] = {1, 1};
-		double _BBoxR[8] = {5.0, 10.0, -0.4, 0.2, 18.0, 23.0, -0.4, 0.2};
-		const double _param[2] = {3.5, 3.5};
-		const int _dir[2] = {-1, 1};
-		const int _ftype[2] = {9, 9};
-		const int _XorYorC[2] = {1, 1};	//1 means X, 2 means Y, 3 means Circular 
-		
-		// declare pointers
-		const int* RorC = new int[nDomains];
-		double* BBoxD = new double[nDomains*4];
-		const int* domainNr = new int[nRelax];
-		double* BBoxR = new double[nRelax*4];
-		const double* param = new double[nRelax];
-		const int* dir = new int[nRelax];
-		const int* ftype = new int[nRelax];
-		const int* XorYorC = new int[nRelax];
-		
-		//initialize Pointers
-		RorC = _RorC;
-		BBoxD = _BBoxD;
-		domainNr = _domainNr;
-		BBoxR = _BBoxR;
-		param = _param;
-		dir = _dir;
-		ftype = _ftype;
-		XorYorC = _XorYorC;
-	
-	//JK: set up coupling in OceanWave3D and get gridpoints inside OpenFOAM Domain	
-	preprocessofdomains_(&nDomains, RorC, BBoxD, &nRelax, domainNr, BBoxR, param, dir, ftype, XorYorC);
-	preprocessofpoints_();
 
-	for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
-    {
-		//JKTODO: watch out! this has to be done
-		//point p(__globalvariables_MOD_xofpoints[i], __globalvariables_MOD_yofpoints[i], 0.);
-		point p(__globalvariables_MOD_xofpoints[i], 0.05, 0.);
-		p = ( OCWtoOF_ & p ) - translateOFMesh_;
-		OfPoints_.append(p);
-	}
-	
 	// Initialise the interpolation routine
 	interpolationinitialize_();
 
@@ -235,14 +172,9 @@ oceanWave3D::oceanWave3D
 			<< "OceanWave3D simulation (" << maxDT_*ocwDuration << " s).\n"
 			<< exit(FatalError) << endl << endl;
 	}
-	
-	//JK:
-	setUpSampling();
-	
+
 	// Update the OceanWave3D to current time (restart)
 	alignTimes();
-	
-
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -301,15 +233,11 @@ void oceanWave3D::mappingTensors()
         {
         	OFtoOCW_.zy() = 1;
         	OFtoOCW_.yz() = 1;
-        	//JK: y is the vertical coordinate
-        	indVertCoord_ = 1;
         }
         else
         {
         	OFtoOCW_.yy() = 1;
         	OFtoOCW_.zz() = 1;
-        	//JK: z is the vertical coordinate
-        	indVertCoord_ = 2;
         }
 	}
 	else
@@ -580,7 +508,7 @@ void oceanWave3D::updatePhi()
     	phi.boundaryFieldRef()[patchi] == phiTemp.boundaryField()[patchi];
     #endif
 #else
-  	phi.boundaryField()[patchi] == phiTemp.boundaryField()[patchi];
+  	//JK:phi.boundaryField()[patchi] == phiTemp.boundaryField()[patchi];
 #endif
     }
 
@@ -762,132 +690,6 @@ void oceanWave3D::writeExternal() const
     }
 }
 
-//JK: 
-void oceanWave3D::setUpSampling()
-{
-    // Writing the sets file	
-	
-	vector axes('x', 'y' ,'z');
-	word vertAxis(axes[indVertCoord_]);
-      
-    autoPtr<OFstream> gauges;
-
-    gauges.reset(new OFstream("Coupling_sets"));
-
-    gauges() << "sets" << nl << token::BEGIN_LIST << nl << incrIndent;
-
-    for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
-    {
-        gauges() << indent << "gauge_" << i << nl << indent
-                 << token::BEGIN_BLOCK << incrIndent << nl;
-        gauges() << indent << "type         face"
-                 << token::END_STATEMENT << nl;
-        gauges() << indent << "axis         " << vertAxis
-                 << token::END_STATEMENT << nl;
-                 //JK: watch out coordinates are rotated
-        gauges() << indent << "start        " << token::BEGIN_LIST 
-				 << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
-				 << "-0.4" << " "
-				 << "0.05"								 //JKTODO this has to be read popperly
-				 //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
-				 << token::END_LIST << token::END_STATEMENT << nl;
-        gauges() << indent << "end          " << token::BEGIN_LIST 
-				 << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
-				 << "0.2" << " "
-				  << "0.05"					 		 //JKTODO this has to be read popperly
-				 //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
-				 << token::END_LIST << token::END_STATEMENT << nl;
-        gauges() << indent << "nPoints      100" << token::END_STATEMENT << nl;
-        gauges() << decrIndent << indent << token::END_BLOCK << nl << nl;
-    }
-    
-    gauges() << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
-	
-	gauges()().flush();
-	
-	//instantiate sampledSurfaceElevation
-    fileName Edict("couplingSurfaceElevationDict");
-	
-	sSets_ = new IOsampledSurfaceElevation
-    (
-        //sampledSurfaceElevation::typeName,
-        "couplingSurfaceElevation",
-        mesh_,
-        Edict,
-        IOobject::MUST_READ,
-        false
-    );
-    
-    
-	fileName Udict("couplingProbesDict");
-	sProbes_ = new IOOCWprobes
-	(
-		//sampledSurfaceElevation::typeName,
-		"couplingProbes",
-		mesh_,
-		Udict,
-		IOobject::MUST_READ,
-		false
-	);
-
-}
-
-//JK: 
-void oceanWave3D::writeToOceanWave3D()
-{
-	if (Pstream::master())
-	{
-		//polyMesh::readUpdateState state = &mesh_.readUpdate(); //JKTODO this has to be fixed for moving meshes
-
-		//sSets_.readUpdate(state); 
-
-		scalarField EtaResult(0); //JKTODO: maybe make this a member variable
-		sSets_->sampleIntegrateAndReturn(EtaResult);
-		//scalar res = result[10];
-		//Info << "HalloHallo: " << result.size() << endl;
-		if (EtaResult.size() != __globalvariables_MOD_nofpoints)
-        {
-			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
-            << "Number of obtained surface elevation samples does"<< nl
-            << "not fit with number of evaluated Points" << exit(FatalError);
-        }
-		
-		
-		forAll (EtaResult, seti)
-		{
-			// write surface elevation to OceanWave3D variable respecting the change of coordinate system
-			__globalvariables_MOD_eof[seti] = EtaResult[seti] - seaLevel_;
-			// update OfPoints to current surface elevation
-			OfPoints_[seti][indVertCoord_] = EtaResult[seti];
-		}
-		
-		sProbes_ -> UpdateProbes(OfPoints_);
-		
-		vectorField UResult(0); //JKTODO: maybe make this a member variable
-		sProbes_ -> sampleAndReturn(UResult);
-		if (UResult.size() != __globalvariables_MOD_nofpoints)
-        {
-			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
-            << "Number of obtained velocity samples does"<< nl
-            << "not fit with number of evaluated Points" << exit(FatalError);
-        }
-		
-		
-		forAll (UResult, seti)
-		{
-			__globalvariables_MOD_uxof[seti] = (OFtoOCW_ & UResult[seti])[0];
-			__globalvariables_MOD_uyof[seti] = (OFtoOCW_ & UResult[seti])[1];
-			__globalvariables_MOD_uzof[seti] = (OFtoOCW_ & UResult[seti])[2];
-		}
-		
-		//Info << "HALLOHALLO: " << Uresult << endl;
-		
-		//Write OF-Solution to OCW3D
-		writeoftoocw3d_();
-		
-	}
-}
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void oceanWave3D::step()
@@ -899,10 +701,7 @@ void oceanWave3D::step()
 
     // Perform time steps in OceanWave3D until OpenFoam has to be used
     timeStepOceanWave3D();
-	
-	//JK: Read OF-Solution at OCW3D grid point locations 
-	writeToOceanWave3D();
-	
+
     // Take a single time step in OceanWave3D and return to OpenFoam
     takeTimeStep(true);
 

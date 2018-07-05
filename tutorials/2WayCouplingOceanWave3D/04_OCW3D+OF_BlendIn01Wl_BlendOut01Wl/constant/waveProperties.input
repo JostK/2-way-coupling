@@ -1,0 +1,113 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.3.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version	2.0;
+    format	ascii;
+    class	dictionary;
+    object	waveProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+seaLevel            0.00;
+
+pName               p_rgh;
+
+relaxationNames     ( inlet outlet);
+
+initializationName  inlet;
+
+externalForcing oceanWave3D;
+
+externalForcingCoeffs
+{
+    waveType oceanWave3D;
+
+    // Define the intervals for the OpenFoam calculations
+    nIntervals 1;
+    startTimes nonuniform List<scalar> 1(100);
+    endTimes nonuniform List<scalar> 1(260);
+
+    // Should the interval be ramped?
+    rampInterval off;
+
+    // Name of the sub-dictionary (without Coeffs), where the externalSource
+    // definition is given. Is needed, when the mapping OCW3D->OpenFoam is
+    // carried out.
+    mappingZone inlet;
+
+    translateOpenFoamMesh (0 0 0);
+
+    //
+    // JK: Two way coupling info
+    //
+    
+    // coupling type (eta, eta_w, eta_ux_uy, fully, oneWay)
+    couplingType eta_w;
+    
+	// name for each spacially enclosed domain (for muliple domains in one case)
+    domainNames (domainOne);
+    
+    // OceanWave3D relaxation function (usually 9 for sponge filter)
+    OCWrelaxationFuction 10;
+    
+    // OceanWave3D relaxation parameter (usually 3.5)
+    OCWrelaxationParam 3.5;
+    
+    // coefficients for each spacially enclosed domain
+    domainOneCoeffs
+    {
+	domainShape  Rectangular;
+	// domain bounding box
+        startX      (200.0 -1.0 -70);
+        endX        (420.0 1.0  5);
+
+		// domainShape Cylindrical;
+		// centre (0 0 0);
+		// radius 3.5;
+	
+        // accociated relaxation zones 
+	relaxationNames (inlet outlet);        
+        		
+	}    
+};
+
+inletCoeffs
+{
+    
+    waveType            externalSource;
+
+    relaxationZone
+    {
+        relaxationScheme    Spatial;
+        relaxationShape     Rectangular;
+        relaxType           INLET;
+        startX              ( 200 -1.0 -70 );
+        endX                ( 220 1.0 5 );
+        orientation         ( 1 0 0 );
+    }
+}
+
+outletCoeffs
+{
+    waveType            externalSource;
+
+    relaxationZone
+    {
+        relaxationScheme    Spatial;
+        relaxationShape     Rectangular;
+        relaxType           OUTLET;
+        startX              ( 400 -1.0 -70 );
+        endX                ( 420 1.0 5 );
+        orientation         ( 1 0 0 );
+    }
+}
+
+
+
+// ************************************************************************* //

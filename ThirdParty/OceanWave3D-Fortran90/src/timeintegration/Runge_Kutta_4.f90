@@ -7,7 +7,7 @@ SUBROUTINE Runge_Kutta_4(rhsFreeSurface)
        RHS, relaxONOFF, LASTPHI, tstep, extrapolationONOFF, LinearONOFF, filteringONOFF, &
        filterALPHA, filterNP, filtercoefficients, GhostGridX, GhostGridY,                &
        swenseONOFF, swenseDir, SFsol, Wavefield , curvilinearONOFF, Wavefield_tmp,       &
-       filtercoefficients2, BreakMod, fileop, IncWaveType, Uneumann, Phist, k1_Phist !JK: added Phist and k1_Phist
+       filtercoefficients2, BreakMod, fileop, IncWaveType, Uneumann, Phist, Ehist, k1_Phist !JK: added Phist Ehist and k1_Phist
   IMPLICIT NONE
   !
   EXTERNAL rhsFreeSurface, BuildLinearSystem, BuildLinearSystemTransformedCurvilinear, DiffXEven, DiffYEven, FILTERING, &
@@ -57,82 +57,11 @@ SUBROUTINE Runge_Kutta_4(rhsFreeSurface)
   END IF
   
   
-  
-  !JK: save old Phi at free surface
+  !JK: save old Phi and Eta at free surface
   Phist = Wavefield%P
+  Ehist = Wavefield%E
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  CALL DifferentiationsFreeSurfacePlane(Wavefield,GhostGridX,GhostGridY,FineGrid,alpha,beta)
-
-  
-  IF (LinearONOFF==1) THEN
-     !	CALL DetermineTransformationConstants(FineGrid%Nx+2*GhostGridX,FineGrid%Ny+2*GhostGridY,&
-     !	     FineGrid%Nz+GhostGridZ,FineGrid,FineGrid%dsigma,Wavefield_tmp)
-     ! GD: test !FIXME: check that dsigma is not used in Curvilinear (i.e. just dsigmanew) NO keep both for VerticalFreeSurfaceVelocity (to optimize)
-     !   IF (curvilinearONOFF==1) THEN
-     CALL DetermineTransformationConstantsArray(FineGrid%Nx+2*GhostGridX,FineGrid%Ny+2*GhostGridY,FineGrid%Nz+GhostGridZ,&
-          FineGrid,FineGrid%dsigmanew,Wavefield)
-     !  ENDIF
-  ENDIF
-  !
-  ! Put the Dirichelet points into the RHS vector. 
-  !
-  RHS(FineGrid%Nz+GhostGridZ,1+GhostGridX:FineGrid%Nx+GhostGridX,1+GhostGridY:FineGrid%Ny+GhostGridY) = &
-       Wavefield%P(1+GhostGridX:FineGrid%Nx+GhostGridX,1+GhostGridY:FineGrid%Ny+GhostGridY)
-  !
-  ! Put the wavemaker Western boundary flux Nuemann points into the RHS vector. 
-  !
-  RHS(1:FineGrid%Nz+GhostGridZ,1,1+GhostGridY:FineGrid%Ny+GhostGridY) = &
-       Uneumann(1:FineGrid%Nz+GhostGridZ,1+GhostGridY:FineGrid%Ny+GhostGridY)
-
-  IF (extrapolationONOFF==1) THEN ! Improving initial guess for iterative solver
-     PHI = 1.5_long*LASTPHI(:,:,:,idxnew) - LASTPHI(:,:,:,idxlast)*half
-     !    PHI = three*LASTPHI(:,:,:,idxnew) - three*LASTPHI(:,:,:,idxlast) + LASTPHI(:,:,:,idxold)
-  ENDIF
-  !
-  ! Solve iteratively for the current 3D PHI. BuildLinearSystem here is the A_time_x routine. 
-  !
-  IF (curvilinearONOFF==1) THEN
-     CALL iterative_solution(RHS,(FineGrid%Nx+2*GhostGridX)*(FineGrid%Ny+2*GhostGridY)*(FineGrid%Nz+GhostGridZ),&
-          BuildLinearSystemTransformedCurvilinear,PHI,FineGrid)
-  ELSE
-     CALL iterative_solution(RHS,(FineGrid%Nx+2*GhostGridX)*(FineGrid%Ny+2*GhostGridY)*(FineGrid%Nz+GhostGridZ),&
-          BuildLinearSystem,PHI,FineGrid)
-  END IF
-!
-! Get the vertical derivative on the free surface to complete the solution update at this stage. 
-!
-  CALL VerticalFreeSurfaceVelocity(Wavefield%W,FineGrid%Nx+2*GhostGridX,FineGrid%Ny+2*GhostGridY,FineGrid%Nz+GhostGridZ,PHI,&
-       FineGrid%DiffStencils,FineGrid%dsigmanew(:,:,:,5), gamma)
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+ 
   !
   ! Build the FSBC right hand sides
   !
@@ -408,14 +337,8 @@ SUBROUTINE Runge_Kutta_4(rhsFreeSurface)
   RKtime = time+dt
   
   
-  
-  
   !JK: save k1_P for 2-way coupling to OpenFOAM
   k1_Phist = k1_P
-  
-  
-  
-  
 
   ! Filtering
   IF (filteringONOFF>0) THEN

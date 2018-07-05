@@ -1,0 +1,36 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 3.0.1-d8a290b55d28
+Exec   : setWaveParameters
+Date   : Jun 28 2018
+Time   : 22:27:55
+Host   : "RN1"
+PID    : 5472
+Case   : /home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/tutorials/2WayCouplingOceanWave3D/test
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+
+Reading g
+
+Reading waveProperties
+
+
+Constructing: oceanWave3DProperties
+
+Constructing: externalSourceProperties
+
+Constructing: externalSourceProperties
+
+End
+

@@ -1,0 +1,236 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 3.0.1-d8a290b55d28
+Exec   : setWaveField
+Date   : Jun 28 2018
+Time   : 19:24:45
+Host   : "RN1"
+PID    : 4132
+Case   : /home/rn1/OpenFOAM/rn1-3.0.1/applications/utilities/2-way-coupling/tutorials/2WayCouplingOceanWave3D/test
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+// using new solver syntax:
+pcorr
+{
+    solver          GAMG;
+    tolerance       1e-07;
+    relTol          0;
+    smoother        DIC;
+    nPreSweeps      0;
+    nPostSweeps     2;
+    nFinestSweeps   2;
+    cacheAgglomeration true;
+    nCellsInCoarsestLevel 10;
+    agglomerator    faceAreaPair;
+    mergeLevels     1;
+}
+
+// using new solver syntax:
+p_rgh
+{
+    solver          GAMG;
+    tolerance       1e-07;
+    relTol          0;
+    smoother        DIC;
+    nPreSweeps      0;
+    nPostSweeps     2;
+    nFinestSweeps   2;
+    cacheAgglomeration true;
+    nCellsInCoarsestLevel 10;
+    agglomerator    faceAreaPair;
+    mergeLevels     1;
+}
+
+// using new solver syntax:
+p_rghFinal
+{
+    solver          GAMG;
+    tolerance       1e-08;
+    relTol          0;
+    smoother        DIC;
+    nPreSweeps      0;
+    nPostSweeps     2;
+    nFinestSweeps   2;
+    cacheAgglomeration true;
+    nCellsInCoarsestLevel 10;
+    agglomerator    faceAreaPair;
+    mergeLevels     1;
+}
+
+// using new solver syntax:
+U
+{
+    solver          PBiCG;
+    preconditioner  DILU;
+    tolerance       1e-09;
+    relTol          0;
+}
+
+// using new solver syntax:
+UFinal
+{
+    solver          PBiCG;
+    preconditioner  DILU;
+    tolerance       1e-09;
+    relTol          0;
+}
+
+// using new solver syntax:
+gamma
+{
+    solver          PBiCG;
+    preconditioner  DILU;
+    tolerance       1e-07;
+    relTol          0;
+}
+
+
+Reading g
+
+Reading waveProperties
+
+Reading waveProperties
+
+*********************************************************
+***                                                   ***
+*** OceanWave3D - a coastal engineering tool for      ***
+*** simulation of nonlinear free surface waves.       ***
+*** Copyright (C) 2009 Allan P. Engsig-Karup.         ***
+***                                                   ***
+*** This OceanWave3D program comes with ABSOLUTELY NO ***
+*** WARRANTY. It is distributed under the conditions  ***
+*** of the GNU General Public License version 3.      ***
+***                                                   ***
+***     Software library developed in 2009 by         ***
+***                                                   ***
+***     Allan P. Engsig-Karup                         ***
+***     Guillaume Ducrozet                            ***
+***                                                   ***
+*** At DTU Informatics                                ***
+***    Scientific Computing Section                   ***
+***    Technical University of Denmark                ***
+***                                                   ***
+***     Original software library written in 2007 by  ***
+***                                                   ***
+***     Allan P. Engsig-Karup                         ***
+***     Harry B. Bingham                              ***
+***                                                   ***
+*** At Department of Mechanical Engineering           ***
+***    Coastal, Maritime and Structural Eng. Section  ***
+***    Technical University of Denmark                ***
+***                                                   ***
+*********************************************************
+
+   Input file with model parameters : OceanWave3D.inp                         
+
+   Header title.................... : Header                                                                  
+
+   PARAMETER INPUT
+
+   Initial Condition (IC), Predefined :   0
+
+   Local filtering downward vertical acceleration limit is: ********
+ * g m/s^2.  Theoretically breaking should occur between 0.5 and 1.
+
+
+   Bathymetry                         : Predefined (in setup for IC)
+   (Nx,Ny,Nz)=(  500,    1,   15)
+   Size of dx: .8016E-01
+
+   The problem is without a y-dimension.
+
+   Uneven node-distribution in Z
+   Ghost point layer included below bottom.
+
+   Half-width stencils: (alpha,beta,gamma)=( 3, 0, 3)
+   Half-width stencils: (alpha,beta,gamma)=( 1, 0, 1) (Preconditioner)
+  
+ Starting time for this run is    0.0000000000000000     
+   Number of time steps chosen:    20000
+   Size of time increment: .1000E-01
+    Time-integration method: Classical Runge-Kutta fourth order
+    GMRES method is chosen.
+    Strategy: GMRES + LU (order            2 )
+    Tolerance levels user-defined. RelTol =    1.0000000000000000E-008  and AbsTol =    9.9999999999999995E-007
+ 
+           5  wave gauge(s) requested in file(s) named "waveGauges.dat".
+  
+   Fully nonlinear model is employed.
+
+ No free-surface pressure term is being applied.  
+
+    SG(          13 ,          10 )-filtering will be employed after every            1  time step.
+  
+ No breaking model line found, the feature is off.
+  
+     Total relaxation zones defined:            2
+  
+ Found            0  pressure damping zones.
+   Standard Cartesian model employed.
+
+ format type 1:           0
+ FilterInit:  Boundary filtering is turned on with values:
+   8.0000000000000002E-002   8.0000000000000002E-002  0.40000000000000002     
+  
+ Initializing variables and arrays.
+ Relaxation zone setup:
+  Zone  1: idx=(     2,    40,     1,     1)
+  Zone  2: idx=(   339,   501,     1,     1)
+   Relaxation zones have been setup.
+      SF solution: k=   1.6729156711127393      ,h=  0.40000000000000002      ,H=  0.10000000000000001      ,T=   2.0000000000000000      ,L=   100.00000000000000     
+                   kh=  0.66916626844509575      ,c=   50.000000000000000     
+ The incident wave is a stream function wave with L=0.375583E+01
+  T=0.200000E+01 H=0.100000E+00 u_E=-.156747E-01 and u_S=0.000000E+00
+
+
+ setup ICs...
+ IC chosen is case            0
+ Initial condition is still water.
+OF-time: 0
+OCW-time: 0
+Interval: [15, 100]
+Identical starting times for OceanWave3D and OpenFoam
+
+Reading field alpha
+
+Reading field U
+
+Reading field p
+
+Setting the wave field ...
+
+--> FOAM Warning : 
+    From function setWaveField::setWaveField( const fvMesh& mesh, volVectorField& U, volScalarField& alpha, volScalarField& p)
+    in file setWaveField/setWaveField.C at line 77
+    
+    The specified value of Tsoft is non-zero in the waveType: `externalSource'
+    specified in the sub-dictionary waveProperties::inletCoeffs
+
+    Consequently, the initialised `wave field' is set to a horizontal free surface with zero velocity.
+
+
+End
+
+ done with ICs
+   Preconditioner: DIRECT LU ( 2 order, linear)
+ Building stencils...
+   Preconditioning matrix generated.
+ workspaceSize =       201151
+ Determine finite difference stencils for the system matrix...
+ Building stencils...
+ ...done!
+          -1
+           1

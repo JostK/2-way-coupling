@@ -246,6 +246,7 @@ END TYPE Wavefield_FS
 
 
 
+
 !JK: Datatype for OpenFOAM domain used for 2-way coupling
 TYPE OfDomain
 	CHARACTER 					   :: RorC			 ! Specifier wheter the OF domain is rectangular or Cylindrical
@@ -260,5 +261,6 @@ TYPE OfPoint
 	REAL(KIND=long)         :: relax		!Relaxation value
 	INTEGER					:: domainNr		!Number of OpenFOAM domain the Point belongs to
 END TYPE OfPoint
+
 
 END MODULE

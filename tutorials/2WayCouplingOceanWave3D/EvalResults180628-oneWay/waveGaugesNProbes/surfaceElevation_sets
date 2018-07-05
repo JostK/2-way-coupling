@@ -1,0 +1,30 @@
+sets
+(
+    gauge_0
+    {
+        type         face;
+        axis         y;
+        start        (7 0 0);
+        end          (7 0.45 0);
+        nPoints      100;
+    }
+
+    gauge_1
+    {
+        type         face;
+        axis         y;
+        start        (20 0 0);
+        end          (20 0.45 0);
+        nPoints      100;
+    }
+
+    gauge_2
+    {
+        type         face;
+        axis         y;
+        start        (14 0 0);
+        end          (14 0.45 0);
+        nPoints      100;
+    }
+
+);

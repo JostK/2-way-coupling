@@ -97,7 +97,46 @@ void oceanWave3DProperties::set( Ostream& os )
 
     // Set the translation of the OF-mesh
     writeGiven(os, "translateOpenFoamMesh");
+    
+    //
+    //JK: Write information for two way coupling
+    //
+    
+    os << endl;
+    
+    // Set coupling type
+	writeGiven(os, "couplingType");
+	
+	wordList domainNames=dict_.lookup("domainNames");
+	writeGiven(os, "domainNames");		
+	
+	writeGiven(os, "OCWrelaxationFuction");
+	writeGiven(os, "OCWrelaxationParam");
+	
+	forAll (domainNames, domaini)
+	{
+		word dm(domainNames[domaini]);
+		
+		os << nl << indent << dm << "Coeffs" << nl;
+		
+        os << indent << token::BEGIN_BLOCK
+           << incrIndent << nl;
 
+        dictionary sd( dict_.subDict(dm + "Coeffs") );
+
+        wordList toc( sd.toc() );
+
+        forAll (toc, item)
+        {
+            ITstream it( sd.lookup(toc[item]) );
+
+            addITstream( os, toc[item], it );
+        }
+
+        os << decrIndent << indent << token::END_BLOCK << endl;
+    }
+	    
+	   
     // Write the closing bracket
     writeEnding( os );
 }

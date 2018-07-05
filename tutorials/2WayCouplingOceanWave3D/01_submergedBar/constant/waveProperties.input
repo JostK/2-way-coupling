@@ -33,7 +33,7 @@ externalForcingCoeffs
 
     // Define the intervals for the OpenFoam calculations
     nIntervals 1;
-    startTimes nonuniform List<scalar> 1(15);
+    startTimes nonuniform List<scalar> 1(1);
     endTimes nonuniform List<scalar> 1(30);
 
     // Should the interval be ramped?

@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version	2.0;
+    format	ascii;
+    class	dictionary;
+    object	waveProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+seaLevel            0;
+
+relaxationNames     ( inlet outlet );
+
+initializationName  inlet;
+
+externalForcing     oceanWave3D;
+
+externalForcingCoeffs
+{
+    waveType            oceanWave3D;
+
+    nIntervals          1;
+    startTimes          nonuniform List<scalar>
+    1
+    (
+        15
+    );
+    endTimes            nonuniform List<scalar>
+    1
+    (
+        100
+    );
+
+    rampInterval        off;
+
+    mappingZone         inlet;
+    translateOpenFoamMesh ( 0 0 0 );
+}
+
+inletCoeffs
+{
+    waveType            externalSource;
+
+    relaxationZone
+    {
+        relaxationScheme    Spatial;
+        relaxationShape     Rectangular;
+        relaxType           INLET;
+        startX              ( 5 0 -1 );
+        endX                ( 10 0 1 );
+        orientation         ( 1 0 0 );
+    }
+}
+
+outletCoeffs
+{
+    waveType            externalSource;
+
+    relaxationZone
+    {
+        relaxationScheme    Spatial;
+        relaxationShape     Rectangular;
+        relaxType           OUTLET;
+        startX              ( 18 0 -1 );
+        endX                ( 23 0 1 );
+        orientation         ( 1 0 0 );
+    }
+}
+
+
+
+// ************************************************************************* //

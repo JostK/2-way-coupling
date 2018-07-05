@@ -1,6 +1,0 @@
-# vtk DataFile Version 3.0
-vtk output
-ASCII
-DATASET POLYDATA
-POINTS 1 float
-10 0 0

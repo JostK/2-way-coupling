@@ -98,7 +98,7 @@ protected:
         IOOCWprobes* sProbes_;
         List<point> OfPoints_;
         label indVertCoord_; //index of the vertical coordinate in OpenFOAM
-
+		word couplingType_;
 
     // Protected member functions
         scalar factor(const scalar&) const;
@@ -135,6 +135,9 @@ protected:
         void calculateKinematics();
 
         void writeExternal() const;
+
+		//JK: read two way coupling input from dict and pass to OceanWave3D
+		void setUpTwoWayCoupling();
         
         //JK: Set up sampling sets for tracking of the Solution
         void setUpSampling();

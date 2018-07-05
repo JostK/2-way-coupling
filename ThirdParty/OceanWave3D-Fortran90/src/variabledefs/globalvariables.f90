@@ -122,6 +122,7 @@ TYPE (wave3DFluxStruct) :: wave3DFlux
 
 
 
+
 !JK: variables for two way coupling to OpenFOAM
 !JK: Array of all enclosed OpenFOAM domains with corrisponding relaxations zones
 TYPE (OfDomain), DIMENSION(:), ALLOCATABLE :: OfDomains
@@ -144,8 +145,9 @@ REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: UxOF
 REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: UyOF
 REAL(KIND=long), DIMENSION(:), ALLOCATABLE :: UzOF
 
-! JK: free surface Phi at last timestep
+! JK: free surface Phi and Eta at last timestep
 REAL(KIND=long), DIMENSION(:,:), ALLOCATABLE :: Phist
+REAL(KIND=long), DIMENSION(:,:), ALLOCATABLE :: Ehist
 
 ! JK: time derivate of Phi at last Timestep
 REAL(KIND=long), DIMENSION(:,:), ALLOCATABLE :: k1_Phist
