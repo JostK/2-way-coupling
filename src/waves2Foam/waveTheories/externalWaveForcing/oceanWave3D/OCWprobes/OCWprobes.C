@@ -350,8 +350,27 @@ void Foam::OCWprobes::timeSet()
     // Do nothing - only valid on write
 }
 
+//~ //JK: for OpenFOAM 301
+//~ void Foam::OCWprobes::write()
+//~ {
+    //~ if (size() && prepare())
+    //~ {
+        //~ sampleAndWrite(scalarFields_);
+        //~ sampleAndWrite(vectorFields_);
+        //~ sampleAndWrite(sphericalTensorFields_);
+        //~ sampleAndWrite(symmTensorFields_);
+        //~ sampleAndWrite(tensorFields_);
 
-void Foam::OCWprobes::write()
+        //~ sampleAndWriteSurfaceFields(surfaceScalarFields_);
+        //~ sampleAndWriteSurfaceFields(surfaceVectorFields_);
+        //~ sampleAndWriteSurfaceFields(surfaceSphericalTensorFields_);
+        //~ sampleAndWriteSurfaceFields(surfaceSymmTensorFields_);
+        //~ sampleAndWriteSurfaceFields(surfaceTensorFields_);
+    //~ }
+//~ }
+
+//JK: for OpenFOAM 4.1
+bool Foam::OCWprobes::write()
 {
     if (size() && prepare())
     {
@@ -367,6 +386,7 @@ void Foam::OCWprobes::write()
         sampleAndWriteSurfaceFields(surfaceSymmTensorFields_);
         sampleAndWriteSurfaceFields(surfaceTensorFields_);
     }
+    return true;
 }
 
 

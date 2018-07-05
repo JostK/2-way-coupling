@@ -282,8 +282,13 @@ public:
         //- Execute at the final time-loop, currently does nothing
         virtual void end();
 
+		//JK: for OpenFOAM 301
         //- Sample and write
-        virtual void write();
+        //virtual void write();
+        
+        //JK: for OpenFOAM 4.1
+        //- Sample and write
+        virtual bool write();
         
         //JK: get results and pass them back as scalarField used for two-way coupling to OceanWave3D
 		void sampleIntegrateAndReturn( Field<scalar>& );

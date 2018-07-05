@@ -154,7 +154,7 @@ void Foam::OCWprobes::sampleAndWrite(const fieldGroup<Type>& fields)
                 sampleAndWrite
                 (
                     mesh_.lookupObject
-                    <GeometricField<Type, fvPatchField, volMesh> >
+                    <GeometricField<Type, fvPatchField, volMesh>>
                     (
                         fields[fieldI]
                     )
@@ -203,7 +203,7 @@ void Foam::OCWprobes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields
                 sampleAndWrite
                 (
                     mesh_.lookupObject
-                    <GeometricField<Type, fvsPatchField, surfaceMesh> >
+                    <GeometricField<Type, fvsPatchField, surfaceMesh>>
                     (
                         fields[fieldI]
                     )
@@ -216,7 +216,7 @@ void Foam::OCWprobes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::OCWprobes::sample
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
@@ -224,16 +224,18 @@ Foam::OCWprobes::sample
 {
     const Type unsetVal(-VGREAT*pTraits<Type>::one);
 
-    tmp<Field<Type> > tValues
+    tmp<Field<Type>> tValues
     (
         new Field<Type>(this->size(), unsetVal)
     );
-
-    Field<Type>& values = tValues();
+//JK: for OpenFOAM 4.1
+    Field<Type>& values = tValues.ref();
+//JK: for OpenFOAM 310
+//    Field<Type>& values = tValues();
 
     if (fixedLocations_)
     {
-        autoPtr<interpolation<Type> > interpolator
+        autoPtr<interpolation<Type>> interpolator
         (
             interpolation<Type>::New(interpolationScheme_, vField)
         );
@@ -272,12 +274,12 @@ Foam::OCWprobes::sample
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::OCWprobes::sample(const word& fieldName) const
 {
     return sample
     (
-        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh> >
+        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh>>
         (
             fieldName
         )
@@ -286,7 +288,7 @@ Foam::OCWprobes::sample(const word& fieldName) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::OCWprobes::sample
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
@@ -294,12 +296,16 @@ Foam::OCWprobes::sample
 {
     const Type unsetVal(-VGREAT*pTraits<Type>::one);
 
-    tmp<Field<Type> > tValues
+    tmp<Field<Type>> tValues
     (
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+//JK: for OpenFOAM 4.1
+    Field<Type>& values = tValues.ref();
+//JK: for OpenFOAM 310
+//    Field<Type>& values = tValues();
+
 
     forAll(*this, probeI)
     {
@@ -317,12 +323,12 @@ Foam::OCWprobes::sample
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::OCWprobes::sampleSurfaceFields(const word& fieldName) const
 {
     return sample
     (
-        mesh_.lookupObject<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        mesh_.lookupObject<GeometricField<Type, fvsPatchField, surfaceMesh>>
         (
             fieldName
         )

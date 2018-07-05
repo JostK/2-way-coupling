@@ -40,6 +40,13 @@ extern "C" double __globalvariables_MOD_dt;
 extern "C" int __globalvariables_MOD_tstep;
 extern "C" int __globalvariables_MOD_ic;
 extern "C" int __globalvariables_MOD_nsteps;
+extern "C" int __globalvariables_MOD_nofpoints;
+extern "C" double* __globalvariables_MOD_xofpoints;
+extern "C" double* __globalvariables_MOD_yofpoints;
+extern "C" double* __globalvariables_MOD_eof;
+extern "C" double* __globalvariables_MOD_uxof;
+extern "C" double* __globalvariables_MOD_uyof;
+extern "C" double* __globalvariables_MOD_uzof;
 extern "C" void oceanwave3dt0setup_();
 extern "C" void oceanwave3dtakeatimestep_();
 extern "C" void closeiofiles_();
@@ -49,7 +56,12 @@ extern "C" void calculatekinematics_();
 extern "C" void openfoaminterface_eta_(double(*)[3] , double *);
 extern "C" void openfoaminterface_u_(double(*)[3] , double *, double *, double *);
 extern "C" void writeoceanwave3d_(int *);
-
+extern "C" void preprocessofdomains_(const int *,const int *, double*,const  int *,const  int(*), double*,const  double *,const  int *,const  int *,const  int *);
+extern "C" void preprocessofpoints_();
+extern "C" void writeoftoocw3d_eta_();
+extern "C" void writeoftoocw3d_eta_ux_uy_();
+extern "C" void writeoftoocw3d_eta_w_();
+extern "C" void writeoftoocw3d_fully_();
 
 namespace waveTheories
 {
@@ -103,7 +115,14 @@ oceanWave3D::oceanWave3D
 
     OFtoOCW_(tensor::zero),
 
-    OCWtoOF_(tensor::zero)
+    OCWtoOF_(tensor::zero),
+    
+    //JK:
+    OfPoints_(0),
+    
+    indVertCoord_(-GREAT),
+    
+    couplingType_(coeffDict_.lookup("couplingType"))
 {
 	if (N_ > 1)
 	{
@@ -155,7 +174,12 @@ oceanWave3D::oceanWave3D
 
 	// Start OceanWave3D
 	oceanwave3dt0setup_();
-
+	
+	
+	// JK: Initialize 2-way coupling
+	setUpTwoWayCoupling();
+	
+	
 	// Initialise the interpolation routine
 	interpolationinitialize_();
 
@@ -172,9 +196,14 @@ oceanWave3D::oceanWave3D
 			<< "OceanWave3D simulation (" << maxDT_*ocwDuration << " s).\n"
 			<< exit(FatalError) << endl << endl;
 	}
-
+	
+	//JK:
+	setUpSampling();
+	
 	// Update the OceanWave3D to current time (restart)
 	alignTimes();
+	
+
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -233,11 +262,15 @@ void oceanWave3D::mappingTensors()
         {
         	OFtoOCW_.zy() = 1;
         	OFtoOCW_.yz() = 1;
+        	//JK: y is the vertical coordinate
+        	indVertCoord_ = 1;
         }
         else
         {
         	OFtoOCW_.yy() = 1;
         	OFtoOCW_.zz() = 1;
+        	//JK: z is the vertical coordinate
+        	indVertCoord_ = 2;
         }
 	}
 	else
@@ -508,7 +541,8 @@ void oceanWave3D::updatePhi()
     	phi.boundaryFieldRef()[patchi] == phiTemp.boundaryField()[patchi];
     #endif
 #else
-  	//JK:phi.boundaryField()[patchi] == phiTemp.boundaryField()[patchi];
+	//JK: comment this line for use with OF4.1
+  	//phi.boundaryField()[patchi] == phiTemp.boundaryField()[patchi];
 #endif
     }
 
@@ -690,6 +724,342 @@ void oceanWave3D::writeExternal() const
     }
 }
 
+//JK: read two way coupling input from dict and pass to OceanWave3D
+void oceanWave3D::setUpTwoWayCoupling()
+{
+	
+	wordList domainNames=coeffDict_.lookup("domainNames");
+	const int nDomains = domainNames.size();
+	int nRelax = 0;
+	int _RorC[nDomains]; //1 means rectangular, 2 means circular Domain
+	double _BBoxD[nDomains*4];
+	
+	// loop trough domains, count relaxation zones and set up the domains bounding box
+	forAll (domainNames, domaini)
+	{
+		dictionary sd( coeffDict_.subDict(domainNames[domaini] + "Coeffs"));
+		wordList relaxationNames=sd.lookup("relaxationNames");
+		nRelax = nRelax + relaxationNames.size();
+		
+		word domainShape(sd.lookup("domainShape"));
+		if (domainShape == "Rectangular")
+		{
+			_RorC[domaini]=1;
+			
+			point startX(sd.lookup("startX"));
+			point endX(sd.lookup("endX"));
+			
+			startX = OFtoOCW_ & (startX + translateOFMesh_);
+			endX = OFtoOCW_ & (endX + translateOFMesh_);
+			
+			_BBoxD[domaini*4] = Foam::min(startX[0], endX[0]);
+			_BBoxD[domaini*4 + 1] = Foam::max(startX[0], endX[0]);
+			_BBoxD[domaini*4+2] = Foam::min(startX[1], endX[1]);
+			_BBoxD[domaini*4 + 3] = Foam::max(startX[1], endX[1]);					
+			
+		}
+		else if (domainShape == "Cylindrical")
+		{
+			_RorC[domaini]=2;
+			
+			point centre(sd.lookup("centre"));
+			double radius(readScalar(sd.lookup("radius")));
+			
+			centre = OFtoOCW_ & (centre + translateOFMesh_);
+			
+			_BBoxD[domaini*4] = centre[0];
+			_BBoxD[domaini*4 + 1] = centre[1];
+			_BBoxD[domaini*4+2] = radius;
+			_BBoxD[domaini*4 + 3] = 0;	
+		}
+		else
+		{
+			FatalErrorIn("oceanWave3D::setUpTwoWayCoupling()")
+			<< "domainShape " << domainShape << " unknown." 
+			<< "domainShape must be Rectangular or Cylindrical"
+			<< exit(FatalError) << endl << endl;
+		}
+	}
+	
+	
+	int _domainNr[nRelax];
+	double _BBoxR[nRelax * 4];
+	double _param[nRelax];
+	int _dir[nRelax];
+	int _ftype[nRelax];
+	int _XorYorC[nRelax]; //1 means X, 2 means Y, 3 means Circular
+	
+	// global index for relaxation zone
+	label indRelax(0);
+	
+	// loop trough relaxation zones and set up the bounding box, domainNr and direction 
+	forAll (domainNames, domaini)
+	{
+		dictionary sd( coeffDict_.subDict(domainNames[domaini] + "Coeffs"));
+		wordList relaxationNames=sd.lookup("relaxationNames");
+		
+		forAll (relaxationNames, relaxi)
+		{
+			_domainNr[indRelax] = domaini+1; //domaini starts at 0 while the fist domainis Nr1
+			_param[indRelax] = readScalar(coeffDict_.lookup("OCWrelaxationParam"));
+			_ftype[indRelax] = readInt(coeffDict_.lookup("OCWrelaxationFuction"));
+			
+			dictionary rl( waveProps_.subDict(relaxationNames[relaxi] + "Coeffs").subDict("relaxationZone"));
+			
+		
+			word relaxationShape(rl.lookup("relaxationShape"));
+			if (relaxationShape == "Rectangular")
+			{
+				
+				// get relaxation zone bounding box
+				point startX(rl.lookup("startX"));
+				point endX(rl.lookup("endX"));
+				
+				startX = OFtoOCW_ & (startX + translateOFMesh_);
+				endX = OFtoOCW_ & (endX + translateOFMesh_);
+				
+				_BBoxR[indRelax*4] = Foam::min(startX[0], endX[0]);
+				_BBoxR[indRelax*4 + 1] = Foam::max(startX[0], endX[0]);
+				_BBoxR[indRelax*4+2] = Foam::min(startX[1], endX[1]);
+				_BBoxR[indRelax*4 + 3] = Foam::max(startX[1], endX[1]);
+				
+				// get orientation of relaxation zone
+				vector orientation(rl.lookup("orientation"));
+				// rotate vector in case of OUTLET
+				word relaxType(rl.lookup("relaxType"));
+				word Outlet("OUTLET");
+				if (relaxType == Outlet)
+					{
+						orientation = - orientation;
+					}
+				orientation = OFtoOCW_ & orientation;
+				
+				if ( abs(orientation[1] + orientation[2]) < SMALL)
+				{
+					// x-direction
+					_XorYorC[indRelax]=1;
+					if ( orientation[0] > 0) { _dir[indRelax]= 1; }
+					else { _dir[indRelax]= -1; }
+				}
+				else if ( abs(orientation[0] + orientation[2]) < SMALL)				
+				{
+					// y-direction
+					_XorYorC[indRelax]=2;
+					if ( orientation[1] > 0) { _dir[indRelax]= 1; }
+					else { _dir[indRelax]= -1; }
+				}
+				else
+				{
+					FatalErrorIn("oceanWave3D::setUpTwoWayCoupling()") 
+					<<" relaxation zones must be oriented in OceanWave3D's x- or y-direction" 
+					<< exit(FatalError) << endl << endl;
+				}
+				//flip direction in case of Allans sponge filter
+				if (_ftype[indRelax]==9) { _dir[indRelax] = -_dir[indRelax];}
+			}
+			else if (relaxationShape == "Cylindrical")
+			{
+				_XorYorC[indRelax]=3;
+				_dir[indRelax]= 1;
+				
+				point centre(rl.lookup("centre"));
+				double rInner(readScalar(rl.lookup("rInner")));
+				double rOuter(readScalar(rl.lookup("rOuter")));
+				
+				centre = OFtoOCW_ & (centre + translateOFMesh_);
+				
+				_BBoxR[indRelax*4] = centre[0];
+				_BBoxR[indRelax*4 + 1] = centre[1];
+				_BBoxR[indRelax*4 + 2] = rInner;
+				_BBoxR[indRelax*4 + 3] = rOuter;	
+			}
+			else
+			{
+				FatalErrorIn("oceanWave3D::setUpTwoWayCoupling()")
+				<< "relaxationShape " << relaxationShape << nl 
+				<<" is not implemented for coupling to OceanWave3D." 
+				<< "relaxationShape must be Rectangular or Cylindrical"
+				<< exit(FatalError) << endl << endl;
+			}	
+			
+			// increase global relaxation zone index
+			indRelax++;
+		}
+	}
+		
+	// declare pointers
+	const int* RorC = new int[nDomains];
+	double* BBoxD = new double[nDomains*4];
+	const int* domainNr = new int[nRelax];
+	double* BBoxR = new double[nRelax*4];
+	const double* param = new double[nRelax];
+	const int* dir = new int[nRelax];
+	const int* ftype = new int[nRelax];
+	const int* XorYorC = new int[nRelax];
+	
+	//initialize Pointers
+	RorC = _RorC;
+	BBoxD = _BBoxD;
+	domainNr = _domainNr;
+	BBoxR = _BBoxR;
+	param = _param;
+	dir = _dir;
+	ftype = _ftype;
+	XorYorC = _XorYorC;
+	
+	//JK: set up coupling in OceanWave3D and get gridpoints inside OpenFOAM Domain	
+	preprocessofdomains_(&nDomains, RorC, BBoxD, &nRelax, domainNr, BBoxR, param, dir, ftype, XorYorC);
+	preprocessofpoints_();
+
+	for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
+    {
+		//JKTODO
+		point p(__globalvariables_MOD_xofpoints[i], -0.05, 0.);	
+		p = ( OCWtoOF_ & p ) - translateOFMesh_;
+		OfPoints_.append(p);
+	}
+}
+
+//JK: 
+void oceanWave3D::setUpSampling()
+{
+    // Writing the sets file	
+	
+	vector axes('x', 'y' ,'z');
+	word vertAxis(axes[indVertCoord_]);
+      
+    autoPtr<OFstream> gauges;
+
+    gauges.reset(new OFstream("Coupling_sets"));
+
+    gauges() << "sets" << nl << token::BEGIN_LIST << nl << incrIndent;
+
+    for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
+    {
+        gauges() << indent << "gauge_" << i << nl << indent
+                 << token::BEGIN_BLOCK << incrIndent << nl;
+        gauges() << indent << "type         face"
+                 << token::END_STATEMENT << nl;
+        gauges() << indent << "axis         " << vertAxis
+                 << token::END_STATEMENT << nl;
+                 //JK: watch out coordinates are rotated
+        gauges() << indent << "start        " << token::BEGIN_LIST 
+				 << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+				 << "-0.05" << " "
+				 << "-3.0"								 //JKTODO this has to be read popperly
+				 //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
+				 << token::END_LIST << token::END_STATEMENT << nl;
+        gauges() << indent << "end          " << token::BEGIN_LIST 
+				 << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+				 << "-0.05" << " "
+				 << "3.0"				 		 //JKTODO this has to be read popperly
+				 //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
+				 << token::END_LIST << token::END_STATEMENT << nl;
+        gauges() << indent << "nPoints      100" << token::END_STATEMENT << nl;
+        gauges() << decrIndent << indent << token::END_BLOCK << nl << nl;
+    }
+    
+    gauges() << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
+	
+	gauges()().flush();
+	
+	//instantiate sampledSurfaceElevation
+    fileName Edict("couplingSurfaceElevationDict");
+	
+	sSets_ = new IOsampledSurfaceElevation
+    (
+        //sampledSurfaceElevation::typeName,
+        "couplingSurfaceElevation",
+        mesh_,
+        Edict,
+        IOobject::MUST_READ,
+        false
+    );
+    
+    
+	fileName Udict("couplingProbesDict");
+	sProbes_ = new IOOCWprobes
+	(
+		//sampledSurfaceElevation::typeName,
+		"couplingProbes",
+		mesh_,
+		Udict,
+		IOobject::MUST_READ,
+		false
+	);
+
+}
+
+//JK: 
+void oceanWave3D::writeToOceanWave3D()
+{
+	if (Pstream::master())
+	{
+		//polyMesh::readUpdateState state = &mesh_.readUpdate(); //JKTODO this has to be fixed for moving meshes
+
+		//sSets_.readUpdate(state); 
+
+		scalarField EtaResult(0); //JKTODO: maybe make this a member variable
+		sSets_->sampleIntegrateAndReturn(EtaResult);
+		//scalar res = result[10];
+		//Info << "HalloHallo: " << result.size() << endl;
+		if (EtaResult.size() != __globalvariables_MOD_nofpoints)
+        {
+			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
+            << "Number of obtained surface elevation samples does"<< nl
+            << "not fit with number of evaluated Points" << exit(FatalError);
+        }
+		
+		
+		forAll (EtaResult, seti)
+		{
+			// write surface elevation to OceanWave3D variable respecting the change of coordinate system
+			__globalvariables_MOD_eof[seti] = EtaResult[seti] - seaLevel_;
+			// update OfPoints to current surface elevation
+			OfPoints_[seti][indVertCoord_] = EtaResult[seti];
+		}
+		
+		sProbes_ -> UpdateProbes(OfPoints_);
+		
+		vectorField UResult(0); //JKTODO: maybe make this a member variable
+		sProbes_ -> sampleAndReturn(UResult);
+		if (UResult.size() != __globalvariables_MOD_nofpoints)
+        {
+			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
+            << "Number of obtained velocity samples does"<< nl
+            << "not fit with number of evaluated Points" << exit(FatalError);
+        }
+		
+		
+		forAll (UResult, seti)
+		{
+			__globalvariables_MOD_uxof[seti] = (OFtoOCW_ & UResult[seti])[0];
+			__globalvariables_MOD_uyof[seti] = (OFtoOCW_ & UResult[seti])[1];
+			__globalvariables_MOD_uzof[seti] = (OFtoOCW_ & UResult[seti])[2];
+		}
+		
+		//Info << "HALLOHALLO: " << Uresult << endl;
+		
+		//Write OF-Solution to OCW3D
+		
+		if(couplingType_=="eta")
+			writeoftoocw3d_eta_();
+		else if( couplingType_=="eta_w")
+			writeoftoocw3d_eta_w_();
+		else if( couplingType_=="eta_ux_uy")
+			writeoftoocw3d_eta_ux_uy_();
+		else if( couplingType_=="fully")
+			writeoftoocw3d_fully_();
+		else if( couplingType_=="oneWay")
+		{}
+		else
+			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
+            << "unknown coupling type:"<< couplingType_ << nl
+            << "must be eta, eta_w, eta_ux_uy, fully or oneWay" 
+            << exit(FatalError);
+	}
+}
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void oceanWave3D::step()
@@ -701,7 +1071,10 @@ void oceanWave3D::step()
 
     // Perform time steps in OceanWave3D until OpenFoam has to be used
     timeStepOceanWave3D();
-
+	
+	//JK: Read OF-Solution at OCW3D grid point locations 
+	writeToOceanWave3D();
+	
     // Take a single time step in OceanWave3D and return to OpenFoam
     takeTimeStep(true);
 

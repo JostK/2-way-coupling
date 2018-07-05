@@ -394,14 +394,25 @@ void Foam::sampledSurfaceElevation::end()
     // Do nothing - only valid on write
 }
 
+//~ //JK for OpenFOAM 301
+//~ void Foam::sampledSurfaceElevation::write()
+//~ {
+    //~ if (size() && checkFieldTypes())
+    //~ {
+        //~ sampleIntegrateAndWrite(scalarFields_);
+    //~ }
+//~ }
 
-void Foam::sampledSurfaceElevation::write()
+//JK: for OpenFOAM 4.1
+bool Foam::sampledSurfaceElevation::write()
 {
     if (size() && checkFieldTypes())
     {
         sampleIntegrateAndWrite(scalarFields_);
     }
+    return true;
 }
+
 
 void Foam::sampledSurfaceElevation::sampleIntegrateAndReturn
 ( 

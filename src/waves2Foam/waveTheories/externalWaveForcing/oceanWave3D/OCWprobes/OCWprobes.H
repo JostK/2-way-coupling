@@ -264,8 +264,13 @@ public:
         //- Called when time was set at the end of the Time::operator++
         virtual void timeSet();
 
+		// JK: for OpenFOAM 301
         //- Sample and write
-        virtual void write();
+        //virtual void write();
+        
+        // JK: for OpenFOAM 4.1
+        //- Sample and write
+        virtual bool write();
 
         //- Read the probes
         virtual void read(const dictionary&);
