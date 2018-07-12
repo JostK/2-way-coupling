@@ -1,10 +1,18 @@
     MRF.correctBoundaryVelocity(U);
+    
+    
+    //JK: 
+
+				Damp = sand*rho*U*alpha2;
+
 
     fvVectorMatrix UEqn
     (
         fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
       + MRF.DDt(rho, U)
       + turbulence->divDevRhoReff(rho, U)
+      // JK: edit
+//      + Damp
      ==
         fvOptions(rho, U)
     );
@@ -31,3 +39,5 @@
 
         fvOptions.correct(U);
     }
+        //JK:
+//        U=U*alpha1;

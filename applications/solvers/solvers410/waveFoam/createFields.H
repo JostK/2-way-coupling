@@ -31,6 +31,34 @@ volVectorField U
 );
 
 #include "createPhi.H"
+// JK edit
+     Info<< "Reading field sand\n" << endl;
+     volScalarField sand
+     (
+         IOobject
+         (
+             "sand",
+             runTime.timeName(),
+             mesh,
+             IOobject::MUST_READ,
+             IOobject::AUTO_WRITE
+         ),
+         mesh
+     );
+     
+     
+	volVectorField Damp
+	(
+		IOobject
+		(
+			"Damp",
+			runTime.timeName(),
+			mesh,
+			IOobject::MUST_READ,
+			IOobject::AUTO_WRITE
+		),
+		mesh
+	);
 
 
 Info<< "Reading transportProperties\n" << endl;

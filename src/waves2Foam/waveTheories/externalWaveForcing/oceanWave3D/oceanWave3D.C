@@ -914,7 +914,7 @@ void oceanWave3D::setUpTwoWayCoupling()
 	for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
     {
 		//JKTODO
-		point p(__globalvariables_MOD_xofpoints[i], -0.05, 0.);	
+		point p(__globalvariables_MOD_xofpoints[i], __globalvariables_MOD_yofpoints[i], 0.);	
 		p = ( OCWtoOF_ & p ) - translateOFMesh_;
 		OfPoints_.append(p);
 	}
@@ -927,6 +927,18 @@ void oceanWave3D::setUpSampling()
 	
 	vector axes('x', 'y' ,'z');
 	word vertAxis(axes[indVertCoord_]);
+	
+	//get sideways coordinate direction index
+	label indSideCoord(0);
+	if (indVertCoord_ == 1)
+	indSideCoord = 2;
+	else if (indVertCoord_ == 2)
+	indSideCoord = 1;
+	else 
+	{
+			FatalErrorIn("void oceanWave3D::setUpSampling()")
+		<< "vertival coordinate should be x or z"<< exit(FatalError);
+	}
       
     autoPtr<OFstream> gauges;
 
@@ -944,15 +956,15 @@ void oceanWave3D::setUpSampling()
                  << token::END_STATEMENT << nl;
                  //JK: watch out coordinates are rotated
         gauges() << indent << "start        " << token::BEGIN_LIST 
-				 << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
-				 << "-0.05" << " "
-				 << "-3.0"								 //JKTODO this has to be read popperly
+				 << OfPoints_[i][0]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+				 << OfPoints_[i][indSideCoord] << " "
+				 << "-5.0"								 //JKTODO this has to be read popperly
 				 //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
 				 << token::END_LIST << token::END_STATEMENT << nl;
         gauges() << indent << "end          " << token::BEGIN_LIST 
-				 << __globalvariables_MOD_xofpoints[i]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
-				 << "-0.05" << " "
-				 << "3.0"				 		 //JKTODO this has to be read popperly
+				 << OfPoints_[i][0]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+				 << OfPoints_[i][indSideCoord] << " "
+				 << "5.0"				 		 //JKTODO this has to be read popperly
 				 //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
 				 << token::END_LIST << token::END_STATEMENT << nl;
         gauges() << indent << "nPoints      100" << token::END_STATEMENT << nl;
@@ -1018,8 +1030,16 @@ void oceanWave3D::writeToOceanWave3D()
 			// update OfPoints to current surface elevation
 			OfPoints_[seti][indVertCoord_] = EtaResult[seti];
 		}
-		
-		sProbes_ -> UpdateProbes(OfPoints_);
+		//JKTODO: submerge Probes slightly
+			List<point> probePoints(0);
+			probePoints.setSize(OfPoints_.size());
+			//point sub = {0.0, 0.0, 0.0754};
+			for(int i = 0; i < __globalvariables_MOD_nofpoints; i++)
+			{
+				probePoints[i] = OfPoints_[i];
+				probePoints[i][2] = probePoints[i][2] - 0.0754;
+			}
+		sProbes_ -> UpdateProbes(probePoints);
 		
 		vectorField UResult(0); //JKTODO: maybe make this a member variable
 		sProbes_ -> sampleAndReturn(UResult);
@@ -1038,7 +1058,6 @@ void oceanWave3D::writeToOceanWave3D()
 			__globalvariables_MOD_uzof[seti] = (OFtoOCW_ & UResult[seti])[2];
 		}
 		
-		//Info << "HALLOHALLO: " << Uresult << endl;
 		
 		//Write OF-Solution to OCW3D
 		
