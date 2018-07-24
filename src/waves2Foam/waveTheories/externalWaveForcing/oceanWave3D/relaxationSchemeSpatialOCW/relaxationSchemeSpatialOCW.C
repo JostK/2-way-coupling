@@ -24,7 +24,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "relaxationSchemeSpatial.H"
+#include "relaxationSchemeSpatialOCW.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -36,17 +36,17 @@ namespace relaxationSchemes
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(relaxationSchemeSpatial, 0);
+defineTypeNameAndDebug(relaxationSchemeSpatialOCW, 0);
 addToRunTimeSelectionTable
 (
     relaxationScheme,
-    relaxationSchemeSpatial,
+    relaxationSchemeSpatialOCW,
     dictionary
 );
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-relaxationSchemeSpatial::relaxationSchemeSpatial
+relaxationSchemeSpatialOCW::relaxationSchemeSpatialOCW
 (
     const word& subDictName,
     const fvMesh& mesh,
@@ -71,7 +71,7 @@ relaxationSchemeSpatial::relaxationSchemeSpatial
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void relaxationSchemeSpatial::correct()
+void relaxationSchemeSpatialOCW::correct()
 {
     // Obtain relaxation zone cells and local sigma coordinate
     // The number of cells and the sigma coordinate can have changed
@@ -114,7 +114,7 @@ void relaxationSchemeSpatial::correct()
         vector UTarget(waveProps_->windVelocity(mesh_.time().value()));
 
         // Only do cutting, if surface is close by
-        if (Foam::mag(sdc) <= 2*cellHeight)
+        if (Foam::mag(sdc) <= 2*cellHeight) //JK: was 2*cellHeight
         {
             localCellNeg lc(mesh_, cellNo);
 
@@ -124,6 +124,10 @@ void relaxationSchemeSpatial::correct()
             {
                 UTarget = waveProps_->U(lc.centreNeg(), mesh_.time().value());
                 alphaTarget = lc.magNeg()/V[cellNo];
+                
+                // JK:
+				scalar uTagretWeight(0.15);
+				UTarget     = U_[cellNo] * (1.0 - uTagretWeight)+ UTarget * uTagretWeight;
             }
         }
         else if (sdc < 0)
@@ -135,8 +139,19 @@ void relaxationSchemeSpatial::correct()
         {
             alphaTarget = 0.0;
             UTarget     = waveProps_->windVelocity( mesh_.time().value() );
+            // JK:
+            scalar uTagretWeight(0.15);
+            UTarget     = U_[cellNo] * (1.0 - uTagretWeight)+ UTarget * uTagretWeight;
         }
         
+        //~ //JK: only relax water Phase
+        //~ vector vec={0.0 , 0.0 , 0.0};
+        //~ if (sdc >0 && UTarget== vec)
+        //~ {
+			//~ scalar uTagretWeight(0.25);
+            //~ UTarget     = U_[cellNo] * (1.0 - uTagretWeight)+ UTarget * uTagretWeight;
+		//~ }
+
         U_[cellNo] = (1 - weight_[celli])*UTarget + weight_[celli]*U_[cellNo];
 
         alpha_[cellNo] = (1 - weight_[celli])*alphaTarget

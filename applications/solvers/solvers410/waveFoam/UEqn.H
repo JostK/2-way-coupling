@@ -3,7 +3,7 @@
     
     //JK: 
 
-				Damp = sand*rho*U*alpha2;
+				Damp = sand*rho*U*1/(1+exp(-100*(alpha2-scalar(0.8))));
 
 
     fvVectorMatrix UEqn
@@ -12,7 +12,7 @@
       + MRF.DDt(rho, U)
       + turbulence->divDevRhoReff(rho, U)
       // JK: edit
-//      + Damp
+      + Damp
      ==
         fvOptions(rho, U)
     );
@@ -40,4 +40,4 @@
         fvOptions.correct(U);
     }
         //JK:
-//        U=U*alpha1;
+        //~ U=U*1/(1+exp(-100*(alpha1-scalar(0.2))));

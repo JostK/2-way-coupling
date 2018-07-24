@@ -92,8 +92,21 @@
       ! column.
       IF(sigma>1.00) THEN 
        
-        !Flag indicating the cell is outside the water column 
-        inOrOut = 1 
+!~         !Flag indicating the cell is outside the water column 
+!~         inOrOut = 1 
+
+
+
+
+		! JK: mirror Point about free surface!!!!!!!!!!
+		inOrOut = 0
+		x0(3) = x0(3) - 2*( x0(3) - (FineGrid%h(NN(1),NN(2)) + Wavefield%E(NN(1),NN(2))))
+        sigma = (x0(3) ) / &
+	    (FineGrid%h(NN(1),NN(2)) + Wavefield%E(NN(1),NN(2)))
+	    
+	    
+	    
+		
         
       ELSE
         ! Flag indicating that the cell is inside the water column
