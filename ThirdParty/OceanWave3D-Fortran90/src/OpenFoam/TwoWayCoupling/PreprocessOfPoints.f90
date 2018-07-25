@@ -4,6 +4,7 @@ SUBROUTINE PreprocessOfPoints
 !
 ! By Jost Kemper
 USE GlobalVariables
+USE Constants
 IMPLICIT NONE
 INTEGER :: i, j, k, l, m, n, p 
 INTEGER	:: nOfDomains
@@ -71,7 +72,8 @@ DO i=1, nOfDomains
 				DO l=1, SIZE (OfDomains(i)%RelaxZones)
 				!check if Points are in one of the OF-Domains relaxation zones	
 					IF (isInBox(j, k, OfDomains(i)%RelaxZones(l)%BBox, OfDomains(i)%RelaxZones(l)%XorY)) THEN
-						OfPoints(n)%relax = getRelax(j, k, OfDomains(i)%RelaxZones(l))
+						OfPoints(n)%relax = one - getRelax(j, k, OfDomains(i)%RelaxZones(l)) 
+						!Note definition of relax is contrary to OCW3D relaxation zones -> 1 means OpenFOAM solution is strongly imposed
 					END IF
 					
 				END DO

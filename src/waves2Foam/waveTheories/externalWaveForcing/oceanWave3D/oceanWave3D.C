@@ -838,15 +838,15 @@ void oceanWave3D::setUpTwoWayCoupling()
 				{
 					// x-direction
 					_XorYorC[indRelax]=1;
-					if ( orientation[0] > 0) { _dir[indRelax]= 1; }
-					else { _dir[indRelax]= -1; }
+					if ( orientation[0] > 0) { _dir[indRelax]= -1; }
+					else { _dir[indRelax]= 1; }
 				}
 				else if ( abs(orientation[0] + orientation[2]) < SMALL)				
 				{
 					// y-direction
 					_XorYorC[indRelax]=2;
-					if ( orientation[1] > 0) { _dir[indRelax]= 1; }
-					else { _dir[indRelax]= -1; }
+					if ( orientation[1] > 0) { _dir[indRelax]= -1; }
+					else { _dir[indRelax]= 1; }
 				}
 				else
 				{
