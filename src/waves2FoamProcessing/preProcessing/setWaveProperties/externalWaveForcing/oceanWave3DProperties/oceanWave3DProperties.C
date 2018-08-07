@@ -113,6 +113,8 @@ void oceanWave3DProperties::set( Ostream& os )
 	writeGiven(os, "OCWrelaxationFuction");
 	writeGiven(os, "OCWrelaxationParam");
 	
+	writeGiven(os, "maxWaveHeight");
+	
 	forAll (domainNames, domaini)
 	{
 		word dm(domainNames[domaini]);

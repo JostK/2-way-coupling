@@ -61,8 +61,12 @@ $(waveTheories)/$(extWF)/oceanWave3D/sampledSurfaceElevation/sampledSurfaceEleva
 $(waveTheories)/$(extWF)/oceanWave3D/OCWprobes/OCWprobes.C
 $(waveTheories)/$(extWF)/oceanWave3D/OCWprobes/OCWprobesGrouping.C
 
-/*JK: RelaxationSheme spatialOCW for twoWay Coupling*/
-$(waveTheories)/$(extWF)/oceanWave3D/relaxationSchemeSpatialOCW/relaxationSchemeSpatialOCW.C
+/*JK: RelaxationSheme spatialOCW3D for twoWay Coupling parallelisation*/
+$(waveTheories)/$(extWF)/oceanWave3D/relaxationSchemeSpatialOCW3D/relaxationSchemeSpatialOCW3D.C
+
+/*JK: RelaxationSheme spatialOCW3D for twoWay Coupling parallelisation*/
+$(waveTheories)/$(extWF)/oceanWave3D/OCW3DfvPatchFields/waveAlpha/OCW3DwaveAlphaFvPatchScalarField.C
+$(waveTheories)/$(extWF)/oceanWave3D/OCW3DfvPatchFields/waveVelocity/OCW3DwaveVelocityFvPatchVectorField.C
 
 /* WAVE BOUNDARY CONDITIONS */ 
 fvPatchFields=fvPatchFields

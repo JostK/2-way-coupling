@@ -3,6 +3,7 @@ INTEGER FUNCTION isInBox(i, j, BBox, RorC) RESULT(isIn)
 ! Evaluates wheter a Gridponit with a certain index is inside or outside a bounding box or cylinder
 !
 USE GlobalVariables
+USE Constants 
 IMPLICIT NONE
 
 !Input variables
@@ -55,10 +56,12 @@ ENDIF
 		ENDIF
 		
 	ELSE IF (RorCtemp == 'C') THEN
-	!TODO: Calculate distance to center and ceck if < radius
-	
-		PRINT*, 'Error: circular domain not implemented yet!'
-		STOP
+	!Calculate distance to center and ceck if <= radius
+		IF ( ((BBox(1)-x(i,j))**two + (BBox(2)-y(i,j))**two)**half <= BBox(3) ) THEN
+				isIn = 1
+			ELSE
+				isIn = 0
+			ENDIF
 		
 	ELSE
 	

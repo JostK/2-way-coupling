@@ -3,6 +3,7 @@ REAL(KIND=long) FUNCTION getRelax(i, j, RZone) RESULT(relax)
 ! Gets Relaxation value for one Point
 !
 USE GlobalVariables
+USE Constants
 IMPLICIT NONE
 !Input variables
 INTEGER :: i, j
@@ -34,7 +35,7 @@ ELSE IF (RZone%XorY == 'C') THEN
 	!Circular relaxation zone
 	x(1) = RZone%BBox(3) 	!inner radius
 	!radius of evaluated point ((xCenter-xPoint)^2+(yCenter-yPoint)^2)^0.5
-	x(2) = ((FineGrid%x(i, j) - RZone%BBox(1))**2 + (FineGrid%y(i, j) - RZone%BBox(2))**2)**0.5
+	x(2) = ((FineGrid%x(i, j) - RZone%BBox(1))**two + (FineGrid%y(i, j) - RZone%BBox(2))**two)**half
 	x(3) = RZone%BBox(4)	!outer radius
 	IF (RZone%dir==-1) THEN ! Reverse order
 		x = x(3:1:-1)

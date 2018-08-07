@@ -928,6 +928,9 @@ void oceanWave3D::setUpSampling()
 	vector axes('x', 'y' ,'z');
 	word vertAxis(axes[indVertCoord_]);
 	
+	scalar maxWaveHeight(0);
+	maxWaveHeight = readScalar(coeffDict_.lookup("maxWaveHeight"));
+	
 	//get sideways coordinate direction index
 	label indSideCoord(0);
 	if (indVertCoord_ == 1)
@@ -954,18 +957,15 @@ void oceanWave3D::setUpSampling()
                  << token::END_STATEMENT << nl;
         gauges() << indent << "axis         " << vertAxis
                  << token::END_STATEMENT << nl;
-                 //JK: watch out coordinates are rotated
         gauges() << indent << "start        " << token::BEGIN_LIST 
-				 << OfPoints_[i][0]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+				 << OfPoints_[i][0]<< " "
 				 << OfPoints_[i][indSideCoord] << " "
-				 << "-5.0"								 //JKTODO this has to be read popperly
-				 //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
+				 << seaLevel_-maxWaveHeight/2
 				 << token::END_LIST << token::END_STATEMENT << nl;
         gauges() << indent << "end          " << token::BEGIN_LIST 
-				 << OfPoints_[i][0]<< " " //JKTODO OfDomain could be rotated and sealevel diferent
+				 << OfPoints_[i][0]<< " "
 				 << OfPoints_[i][indSideCoord] << " "
-				 << "5.0"				 		 //JKTODO this has to be read popperly
-				 //<< __globalvariables_MOD_yofpoints[i] //JKTODO OfDomain could be rotated and sealevel diferent
+				 << seaLevel_+maxWaveHeight/2
 				 << token::END_LIST << token::END_STATEMENT << nl;
         gauges() << indent << "nPoints      100" << token::END_STATEMENT << nl;
         gauges() << decrIndent << indent << token::END_BLOCK << nl << nl;
@@ -977,7 +977,6 @@ void oceanWave3D::setUpSampling()
 	
 	//instantiate sampledSurfaceElevation
     fileName Edict("couplingSurfaceElevationDict");
-	
 	sSets_ = new IOsampledSurfaceElevation
     (
         //sampledSurfaceElevation::typeName,
@@ -1013,8 +1012,7 @@ void oceanWave3D::writeToOceanWave3D()
 
 		scalarField EtaResult(0); //JKTODO: maybe make this a member variable
 		sSets_->sampleIntegrateAndReturn(EtaResult);
-		//scalar res = result[10];
-		//Info << "HalloHallo: " << result.size() << endl;
+
 		if (EtaResult.size() != __globalvariables_MOD_nofpoints)
         {
 			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
