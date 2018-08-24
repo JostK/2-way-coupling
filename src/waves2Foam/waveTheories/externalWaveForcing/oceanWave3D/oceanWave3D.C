@@ -171,38 +171,40 @@ oceanWave3D::oceanWave3D
 
 	// Make the mapping tensors
 	mappingTensors();
-
-	// Start OceanWave3D
-	oceanwave3dt0setup_();
 	
-	
-	// JK: Initialize 2-way coupling
-	setUpTwoWayCoupling();
-	
-	
-	// Initialise the interpolation routine
-	interpolationinitialize_();
-
-	// Get the uniform time step specified in OceanWave3D input file
-	maxDT_ = __globalvariables_MOD_dt;
-
-	label ocwDuration = __globalvariables_MOD_nsteps;
-
-	if (maxDT_*ocwDuration < rT_.endTime().value())
+	if (Pstream::master())
 	{
-		FatalErrorIn("oceanWave3D::oceanWave3D(IOobject io, Time& rT, const fvMesh& mesh)")
-			<< "The duration of the OpenFoam simulation ("
-			<< rT_.endTime().value() << " s) exceeds the duration of the \n"
-			<< "OceanWave3D simulation (" << maxDT_*ocwDuration << " s).\n"
-			<< exit(FatalError) << endl << endl;
+		// Start OceanWave3D (only master)
+		oceanwave3dt0setup_();
+		
+		
+		// JK: Initialize 2-way coupling (only master)
+		setUpTwoWayCoupling();
+		
+		
+		// Initialise the interpolation routine (only master)
+		interpolationinitialize_();
+
+		// Get the uniform time step specified in OceanWave3D input file (only master)
+		maxDT_ = __globalvariables_MOD_dt;
+
+		label ocwDuration = __globalvariables_MOD_nsteps;
+
+		if (maxDT_*ocwDuration < rT_.endTime().value())
+		{
+			FatalErrorIn("oceanWave3D::oceanWave3D(IOobject io, Time& rT, const fvMesh& mesh)")
+				<< "The duration of the OpenFoam simulation ("
+				<< rT_.endTime().value() << " s) exceeds the duration of the \n"
+				<< "OceanWave3D simulation (" << maxDT_*ocwDuration << " s).\n"
+				<< exit(FatalError) << endl << endl;
+		}
+		
+		// Update the OceanWave3D to current time (restart) (only master)
+		alignTimes();
 	}
 	
-	//JK:
+	//JK: set up Probes to sample OpenFOAM solution
 	setUpSampling();
-	
-	// Update the OceanWave3D to current time (restart)
-	alignTimes();
-	
 
 }
 
@@ -656,6 +658,12 @@ void oceanWave3D::updateTimeAndTimeStep()
 #endif
     #include "setDeltaT.H"
 
+	//JK: set deltaT back to fixed timestep if not adjustable
+	if (! adjustTimeStep)
+	{
+		runTime.setDeltaT( readScalar(runTime.controlDict().lookup("deltaT")) );
+	}
+	
 	// Update time:
 	runTime++;
 }
@@ -923,63 +931,72 @@ void oceanWave3D::setUpTwoWayCoupling()
 //JK: 
 void oceanWave3D::setUpSampling()
 {
-    // Writing the sets file	
-	
-	vector axes('x', 'y' ,'z');
-	word vertAxis(axes[indVertCoord_]);
-	
-	scalar maxWaveHeight(0);
-	maxWaveHeight = readScalar(coeffDict_.lookup("maxWaveHeight"));
-	
-	//get sideways coordinate direction index
-	label indSideCoord(0);
-	if (indVertCoord_ == 1)
-	indSideCoord = 2;
-	else if (indVertCoord_ == 2)
-	indSideCoord = 1;
-	else 
+    // Writing the sets file (master only)
+	if (Pstream::master())
 	{
-			FatalErrorIn("void oceanWave3D::setUpSampling()")
-		<< "vertival coordinate should be x or z"<< exit(FatalError);
+		vector axes('x', 'y' ,'z');
+		word vertAxis(axes[indVertCoord_]);
+		
+		scalar maxWaveHeight(0);
+		maxWaveHeight = readScalar(coeffDict_.lookup("maxWaveHeight"));
+		
+		//get sideways coordinate direction index
+		label indSideCoord(0);
+		if (indVertCoord_ == 1)
+		indSideCoord = 2;
+		else if (indVertCoord_ == 2)
+		indSideCoord = 1;
+		else 
+		{
+				FatalErrorIn("void oceanWave3D::setUpSampling()")
+			<< "vertival coordinate should be x or z"<< exit(FatalError);
+		}
+		  
+		autoPtr<OFstream> gauges;
+
+		gauges.reset(new OFstream("Coupling_sets"));
+
+		gauges() << "sets" << nl << token::BEGIN_LIST << nl << incrIndent;
+
+		for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
+		{
+			gauges() << indent << "gauge_" << i << nl << indent
+					 << token::BEGIN_BLOCK << incrIndent << nl;
+			gauges() << indent << "type         face"
+					 << token::END_STATEMENT << nl;
+			gauges() << indent << "axis         " << vertAxis
+					 << token::END_STATEMENT << nl;
+			gauges() << indent << "start        " << token::BEGIN_LIST 
+					 << OfPoints_[i][0]<< " "
+					 << OfPoints_[i][indSideCoord] << " "
+					 << seaLevel_-maxWaveHeight/2
+					 << token::END_LIST << token::END_STATEMENT << nl;
+			gauges() << indent << "end          " << token::BEGIN_LIST 
+					 << OfPoints_[i][0]<< " "
+					 << OfPoints_[i][indSideCoord] << " "
+					 << seaLevel_+maxWaveHeight/2
+					 << token::END_LIST << token::END_STATEMENT << nl;
+			gauges() << indent << "nPoints      100" << token::END_STATEMENT << nl;
+			gauges() << decrIndent << indent << token::END_BLOCK << nl << nl;
+		}
+		
+		gauges() << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
+		
+		gauges()().flush();
 	}
-      
-    autoPtr<OFstream> gauges;
-
-    gauges.reset(new OFstream("Coupling_sets"));
-
-    gauges() << "sets" << nl << token::BEGIN_LIST << nl << incrIndent;
-
-    for(int i=0; i<__globalvariables_MOD_nofpoints; i++)
-    {
-        gauges() << indent << "gauge_" << i << nl << indent
-                 << token::BEGIN_BLOCK << incrIndent << nl;
-        gauges() << indent << "type         face"
-                 << token::END_STATEMENT << nl;
-        gauges() << indent << "axis         " << vertAxis
-                 << token::END_STATEMENT << nl;
-        gauges() << indent << "start        " << token::BEGIN_LIST 
-				 << OfPoints_[i][0]<< " "
-				 << OfPoints_[i][indSideCoord] << " "
-				 << seaLevel_-maxWaveHeight/2
-				 << token::END_LIST << token::END_STATEMENT << nl;
-        gauges() << indent << "end          " << token::BEGIN_LIST 
-				 << OfPoints_[i][0]<< " "
-				 << OfPoints_[i][indSideCoord] << " "
-				 << seaLevel_+maxWaveHeight/2
-				 << token::END_LIST << token::END_STATEMENT << nl;
-        gauges() << indent << "nPoints      100" << token::END_STATEMENT << nl;
-        gauges() << decrIndent << indent << token::END_BLOCK << nl << nl;
-    }
-    
-    gauges() << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
+	//JKTODO: does this work or will some processors read the file before it has been written
 	
-	gauges()().flush();
-	
-	//instantiate sampledSurfaceElevation
     fileName Edict("couplingSurfaceElevationDict");
+    fileName Udict("couplingProbesDict");
+    
+    //instantiate sampledSurfaceElevation
+    if (Pstream::parRun())
+	{
+		Edict = "../" + Edict;
+		Udict = "../" + Udict;
+	}
 	sSets_ = new IOsampledSurfaceElevation
     (
-        //sampledSurfaceElevation::typeName,
         "couplingSurfaceElevation",
         mesh_,
         Edict,
@@ -987,11 +1004,9 @@ void oceanWave3D::setUpSampling()
         false
     );
     
-    
-	fileName Udict("couplingProbesDict");
+    //instantiate velocity probes
 	sProbes_ = new IOOCWprobes
 	(
-		//sampledSurfaceElevation::typeName,
 		"couplingProbes",
 		mesh_,
 		Udict,
@@ -1004,15 +1019,17 @@ void oceanWave3D::setUpSampling()
 //JK: 
 void oceanWave3D::writeToOceanWave3D()
 {
+
+	//polyMesh::readUpdateState state = &mesh_.readUpdate(); //JKTODO this has to be fixed for moving meshes
+
+	//sSets_.readUpdate(state); 
+
+	scalarField EtaResult(0);
+	sSets_->sampleIntegrateAndReturn(EtaResult);
+	
+	//only master has valid result
 	if (Pstream::master())
 	{
-		//polyMesh::readUpdateState state = &mesh_.readUpdate(); //JKTODO this has to be fixed for moving meshes
-
-		//sSets_.readUpdate(state); 
-
-		scalarField EtaResult(0); //JKTODO: maybe make this a member variable
-		sSets_->sampleIntegrateAndReturn(EtaResult);
-
 		if (EtaResult.size() != __globalvariables_MOD_nofpoints)
         {
 			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
@@ -1028,26 +1045,33 @@ void oceanWave3D::writeToOceanWave3D()
 			// update OfPoints to current surface elevation
 			OfPoints_[seti][indVertCoord_] = EtaResult[seti];
 		}
-		//JKTODO: submerge Probes slightly
+	}
+	
+	Pstream::scatter(OfPoints_);
+	
+			//JKTODO: submerge Probes slightly
 			List<point> probePoints(0);
 			probePoints.setSize(OfPoints_.size());
-			//point sub = {0.0, 0.0, 0.0754};
-			for(int i = 0; i < __globalvariables_MOD_nofpoints; i++)
+			for(int i = 0; i < OfPoints_.size(); i++)
 			{
 				probePoints[i] = OfPoints_[i];
-				probePoints[i][2] = probePoints[i][2] - 0.0754;
+				probePoints[i][2] = probePoints[i][2] - 0.0754; //JKTODO!!!!!!
 			}
-		sProbes_ -> UpdateProbes(probePoints);
-		
-		vectorField UResult(0); //JKTODO: maybe make this a member variable
-		sProbes_ -> sampleAndReturn(UResult);
+	sProbes_ -> UpdateProbes(OfPoints_);
+	
+	
+	vectorField UResult(0);
+	sProbes_ -> sampleAndReturn(UResult);
+	
+	//only master has valid result
+	if (Pstream::master())
+	{
 		if (UResult.size() != __globalvariables_MOD_nofpoints)
         {
 			FatalErrorIn("void oceanWave3D::writeToOceanWave3D()")
             << "Number of obtained velocity samples does"<< nl
             << "not fit with number of evaluated Points" << exit(FatalError);
         }
-		
 		
 		forAll (UResult, seti)
 		{
@@ -1081,34 +1105,43 @@ void oceanWave3D::writeToOceanWave3D()
 
 void oceanWave3D::step()
 {
-	scalar beforeTime = rT_.elapsedCpuTime();
 
-	// Update intervals, if the old one is finished
-    updateIntervals();
+		scalar beforeTime = rT_.elapsedCpuTime();
+		
+	if (Pstream::master())
+	{
+		// Update intervals, if the old one is finished
+		updateIntervals();
 
-    // Perform time steps in OceanWave3D until OpenFoam has to be used
-    timeStepOceanWave3D();
+		// Perform time steps in OceanWave3D until OpenFoam has to be used
+		timeStepOceanWave3D();
+	}
 	
 	//JK: Read OF-Solution at OCW3D grid point locations 
 	writeToOceanWave3D();
 	
-    // Take a single time step in OceanWave3D and return to OpenFoam
-    takeTimeStep(true);
+	if (Pstream::master())
+	{	
+		// Take a single time step in OceanWave3D and return to OpenFoam
+		takeTimeStep(true);
 
-    writeExternal();
-
-	Info << "External step: " << rT_.elapsedCpuTime() - beforeTime << " s."
-	     << endl;
+		writeExternal();
+	}
+		Info << "External step: " << rT_.elapsedCpuTime() - beforeTime << " s."
+			 << endl;
 }
 
 
 void oceanWave3D::close()
 {
-	// If used for setWaveField at t = 0, there is nothing to close
-	if (0 < __globalvariables_MOD_time)
+	if (Pstream::master())
 	{
-        closevariables_();
-    }
+		// If used for setWaveField at t = 0, there is nothing to close
+		if (0 < __globalvariables_MOD_time)
+		{
+			closevariables_();
+		}
+	}
 }
 
 
@@ -1117,28 +1150,113 @@ scalar oceanWave3D::eta
     const point& x,
     const scalar& time
 ) const
-{
-	// Rotate the point x according to the predefined rotation matrix
-	vector xx = OFtoOCW_ & (x + translateOFMesh_);
+{	
+	point endP(point::zero);
+	endP[0] = -1000000;
+	endP[1] = -1000000;
+	endP[2] = -1000000;
+	List<point> endList(Pstream::nProcs());
+	for (int proc = 0; proc < Pstream::nProcs(); proc++)
+	{
+		endList[proc] = endP;
+	}
+		
+	//put all points to sample in a list, gather on master processor and scatter to all processors
+	List<point> samplePoints(Pstream::nProcs());
+	samplePoints = zero();
+	samplePoints[Pstream::myProcNo()] = x;
+	Pstream::gatherList(samplePoints);
+	Pstream::scatterList(samplePoints);
 
-	// Create output
-    double eta(0);
+	int tag = Pstream::allocateTag("Eta");
+		
+	if (Pstream::master())
+	{
+		while (samplePoints != endList)
+		{	
+			// Create list with results
+			scalarList results(Pstream::nProcs());
+			results = zero();
+			
+			//process points from all processors on master node
+			for (int proc = 0; proc < Pstream::nProcs(); proc++)
+			{
+				if (samplePoints[proc] != endP)
+				{
 
-    // Create location in Fortran-format based on rotated coordinates
-    double x0[3];
-    x0[0] = xx[0];
-    x0[1] = xx[1];
-    x0[2] = xx[2] - seaLevel_;  // Notice displacement of coordinate system in OceanWave3D
+					//~ samplePoints[proc] = waveProps_->U(samplePoints[proc], mesh_.time().value());
+					// do sampling:
+						// Rotate the point x according to the predefined rotation matrix
+						vector xx = OFtoOCW_ & (samplePoints[proc] + translateOFMesh_);
 
-    // Evaluate the surface elevation
-    openfoaminterface_eta_(&x0,&eta);
+						// Create output
+						double eta(0);
+						
+						// Create location in Fortran-format based on rotated coordinates
+						double x0[3];
+						x0[0] = xx[0];
+						x0[1] = xx[1];
+						x0[2] = xx[2] - seaLevel_;  // Notice displacement of coordinate system in OceanWave3D
 
-    // Multiply by the ramping factor
-    eta *= factor(time);
-    eta += seaLevel_;
+						// Evaluate the surface elevation
+						openfoaminterface_eta_(&x0,&eta);
 
-    // Return data
-    return eta;
+						// Multiply by the ramping factor
+						eta *= factor(time);
+						eta += seaLevel_;
+						
+						//save result in list
+						results[proc] = eta;
+						
+					if (proc != Pstream::masterNo())
+					{
+						// send result to slave
+						OPstream toSlave(Pstream::blocking, proc, 0, 10);
+						toSlave << eta;
+					}
+				}	
+			}
+					
+			if (samplePoints[Pstream::masterNo()] != endP)
+			{
+				// there are still points to be sampled on the master!
+				// Return the solution and come back with next point
+				Pstream::freeTag("Eta", tag);
+				return results[Pstream::masterNo()];
+			}
+			
+			//gather lists from all processors
+			Pstream::gatherList(samplePoints);
+			Pstream::scatterList(samplePoints);
+		}	
+	}
+	else
+	{
+		if (x != endP)
+		{
+			// recieve result from master and return
+			IPstream fromMaster(Pstream::blocking, Pstream::masterNo(), 0, 10);
+			double eta(0);
+			fromMaster >> eta;
+		
+			// Return the solution
+			Pstream::freeTag("Eta", tag);
+			return eta;
+		}
+		else
+		{
+			//wait for all requests from other processors to finish
+			while (samplePoints != endList)
+			{
+				Pstream::gatherList(samplePoints);
+				Pstream::scatterList(samplePoints);
+			}
+		}
+	}
+
+	// Return endpoint
+	Pstream::freeTag("Eta", tag);
+	return -1000000;
 }
 
 
@@ -1169,38 +1287,116 @@ vector oceanWave3D::U
     const scalar& time
 ) const
 {
-	// Rotate the point x according to the predefined rotation matrix
-	vector xx = OFtoOCW_ & (x + translateOFMesh_);
+	point endP(point::zero);
+	endP[0] = -1000000;
+	endP[1] = -1000000;
+	endP[2] = -1000000;
+	List<point> endList(Pstream::nProcs());
+	for (int proc = 0; proc < Pstream::nProcs(); proc++)
+	{
+		endList[proc] = endP;
+	}
+		
+	//put all points to sample in a list, gather on master processor and scatter to all processors
+	List<point> samplePoints(Pstream::nProcs());
+	samplePoints = zero();
+	samplePoints[Pstream::myProcNo()] = x;
+	Pstream::gatherList(samplePoints);
+	Pstream::scatterList(samplePoints);
 
-    // Map the coordinates to fortran format
-    double x0[3];
+	int tag = Pstream::allocateTag("OCW3DU");
+		
+	if (Pstream::master())
+	{
+		while (samplePoints != endList)
+		{	
+			//process points from all processors on master node
+			for (int proc = 0; proc < Pstream::nProcs(); proc++)
+			{
+				if (samplePoints[proc] != endP)
+				{
 
-    x0[0] = xx[0];
-    x0[1] = xx[1];
-    x0[2] = xx[2] - seaLevel_;
+					//~ samplePoints[proc] = waveProps_->U(samplePoints[proc], mesh_.time().value());
+					// do sampling:
+						// Rotate the point x according to the predefined rotation matrix
+						vector xx = OFtoOCW_ & (samplePoints[proc] + translateOFMesh_);
 
-    // Make the return variables
-    double utemp(0);
-    double vtemp(0);
-    double wtemp(0);
+						// Map the coordinates to fortran format
+						double x0[3];
 
-    // Evaluate the velocity in the given point
-    openfoaminterface_u_(&x0,&utemp,&vtemp,&wtemp);
+						x0[0] = xx[0];
+						x0[1] = xx[1];
+						x0[2] = xx[2] - seaLevel_;
 
-    // Map the solution of OF-format but still in rotated form
-    vector U(vector::zero);
-    U.x() = utemp;
-    U.y() = vtemp;
-    U.z() = wtemp;
+						// Make the return variables
+						double utemp(0);
+						double vtemp(0);
+						double wtemp(0);
 
-    // Rotate the solution back to the defined coordinate system in OpenFoam
-    U = OCWtoOF_ & U;
+						// Evaluate the velocity in the given point
+						openfoaminterface_u_(&x0,&utemp,&vtemp,&wtemp);
 
-    // Multiply by the ramping factor
-    U *= factor(time);
+						// Map the solution of OF-format but still in rotated form
+						//~ 
+						samplePoints[proc].x() = utemp;
+						samplePoints[proc].y() = vtemp;
+						samplePoints[proc].z() = wtemp;
 
-    // Return the solution
-    return U;
+						// Rotate the solution back to the defined coordinate system in OpenFoam
+						samplePoints[proc] = OCWtoOF_ & samplePoints[proc];
+
+						// Multiply by the ramping factor
+						samplePoints[proc] *= factor(time);
+					
+					if (proc != Pstream::masterNo())
+					{
+						// send result to slave
+						OPstream toSlave(Pstream::blocking, proc, 0, tag);
+						toSlave << samplePoints[proc];
+					}
+				}	
+			}
+					
+			if (samplePoints[Pstream::masterNo()] != endP)
+			{
+				// there are still points to be sampled on the master
+				// Return the solution and come back with next point
+				Pstream::freeTag("OCW3DU", tag);
+				return samplePoints[Pstream::masterNo()];
+			}
+			
+			//gather lists from all processors
+			Pstream::gatherList(samplePoints);
+			Pstream::scatterList(samplePoints);
+		}	
+	}
+	else
+	{
+		if (x != endP)
+		{
+			// recieve result from master and return
+			IPstream fromMaster(Pstream::blocking, Pstream::masterNo(), 0, tag);
+			vector U(vector::zero);
+			fromMaster >> U;
+			
+			// Return the solution
+			Pstream::freeTag("OCW3DU", tag);
+			return U;
+		}
+		else
+		{
+			//wait for all requests from other processors to finish
+			while (samplePoints != endList)
+			{
+				Pstream::gatherList(samplePoints);
+				Pstream::scatterList(samplePoints);
+			}
+		}
+	}
+
+	// Return endpoint
+	Pstream::freeTag("OCW3DU", tag);
+	return endP;	
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
