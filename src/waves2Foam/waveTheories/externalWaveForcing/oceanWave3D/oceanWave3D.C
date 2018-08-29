@@ -56,7 +56,7 @@ extern "C" void calculatekinematics_();
 extern "C" void openfoaminterface_eta_(double(*)[3] , double *);
 extern "C" void openfoaminterface_u_(double(*)[3] , double *, double *, double *);
 extern "C" void writeoceanwave3d_(int *);
-extern "C" void preprocessofdomains_(const int *,const int *, double*,const  int *,const  int(*), double*,const  double *,const  int *,const  int *,const  int *);
+extern "C" void preprocessofdomains_(const int *,const int *, double*,const  int *,const  int(*), double*,const  double *,const  int *,const  int *,const  int *,const  int *,const  int(*),const  int(*), double*);
 extern "C" void preprocessofpoints_();
 extern "C" void writeoftoocw3d_eta_();
 extern "C" void writeoftoocw3d_eta_ux_uy_();
@@ -739,6 +739,7 @@ void oceanWave3D::setUpTwoWayCoupling()
 	wordList domainNames=coeffDict_.lookup("domainNames");
 	const int nDomains = domainNames.size();
 	int nRelax = 0;
+	int nStruc = 0;
 	int _RorC[nDomains]; //1 means rectangular, 2 means circular Domain
 	double _BBoxD[nDomains*4];
 	
@@ -748,6 +749,9 @@ void oceanWave3D::setUpTwoWayCoupling()
 		dictionary sd( coeffDict_.subDict(domainNames[domaini] + "Coeffs"));
 		wordList relaxationNames=sd.lookup("relaxationNames");
 		nRelax = nRelax + relaxationNames.size();
+		
+		wordList structureNames=sd.lookup("structureNames"); //JKTODO lookupordefault
+		nStruc = nStruc + structureNames.size();
 		
 		word domainShape(sd.lookup("domainShape"));
 		if (domainShape == "Rectangular")
@@ -796,9 +800,13 @@ void oceanWave3D::setUpTwoWayCoupling()
 	int _dir[nRelax];
 	int _ftype[nRelax];
 	int _XorYorC[nRelax]; //1 means X, 2 means Y, 3 means Circular
+	int _domainNrS[nStruc];
+	int _RorCS[nStruc]; //1 means rectangular, 2 means circular Domain
+	double _BBoxS[nStruc * 4];
 	
-	// global index for relaxation zone
+	// global index for relaxation zone and structures
 	label indRelax(0);
+	label indStruc(0);
 	
 	// loop trough relaxation zones and set up the bounding box, domainNr and direction 
 	forAll (domainNames, domaini)
@@ -806,6 +814,7 @@ void oceanWave3D::setUpTwoWayCoupling()
 		dictionary sd( coeffDict_.subDict(domainNames[domaini] + "Coeffs"));
 		wordList relaxationNames=sd.lookup("relaxationNames");
 		
+		//set up corrisponding relaxation zones
 		forAll (relaxationNames, relaxi)
 		{
 			_domainNr[indRelax] = domaini+1; //domaini starts at 0 while the fist domainis Nr1
@@ -893,6 +902,62 @@ void oceanWave3D::setUpTwoWayCoupling()
 			// increase global relaxation zone index
 			indRelax++;
 		}
+		
+		
+		
+		//set up corrisponding structures
+		wordList structureNames=sd.lookup("structureNames"); //JKTODO lookupordefault
+		forAll (structureNames, structi)
+		{
+			_domainNrS[indStruc] = domaini+1; //domaini starts at 0 while the fist domainis Nr1
+			
+			dictionary ssd( sd.subDict(structureNames[structi] + "Coeffs"));
+			
+		
+			word structureShape(ssd.lookup("structureShape"));
+			if (structureShape == "Rectangular")
+			{
+				_RorCS[indStruc]=1;
+				
+				// get structure bounding box
+				point startX(ssd.lookup("startX"));
+				point endX(ssd.lookup("endX"));
+				
+				startX = OFtoOCW_ & (startX + translateOFMesh_);
+				endX = OFtoOCW_ & (endX + translateOFMesh_);
+				
+				_BBoxS[indStruc*4] = Foam::min(startX[0], endX[0]);
+				_BBoxS[indStruc*4 + 1] = Foam::max(startX[0], endX[0]);
+				_BBoxS[indStruc*4+2] = Foam::min(startX[1], endX[1]);
+				_BBoxS[indStruc*4 + 3] = Foam::max(startX[1], endX[1]);
+				
+			}
+			else if (structureShape == "Cylindrical")
+			{
+				_RorCS[indStruc]=2;
+				
+				point centre(ssd.lookup("centre"));
+				double radius(readScalar(ssd.lookup("radius")));
+				
+				centre = OFtoOCW_ & (centre + translateOFMesh_);
+				
+				_BBoxS[indStruc*4] = centre[0];
+				_BBoxS[indStruc*4 + 1] = centre[1];
+				_BBoxS[indStruc*4+2] = radius;
+				_BBoxS[indStruc*4 + 3] = 0;		
+			}
+			else
+			{
+				FatalErrorIn("oceanWave3D::setUpTwoWayCoupling()")
+				<< "structureShape " << structureShape << nl 
+				<<" is not implemented for coupling to OceanWave3D." 
+				<< "structureShape must be Rectangular or Cylindrical"
+				<< exit(FatalError) << endl << endl;
+			}	
+			
+			// increase global structure index
+			indStruc++;
+		}
 	}
 		
 	// declare pointers
@@ -904,6 +969,9 @@ void oceanWave3D::setUpTwoWayCoupling()
 	const int* dir = new int[nRelax];
 	const int* ftype = new int[nRelax];
 	const int* XorYorC = new int[nRelax];
+	const int* domainNrS = new int[nStruc];
+	const int* RorCS = new int[nStruc];
+	double* BBoxS = new double[nStruc*4];
 	
 	//initialize Pointers
 	RorC = _RorC;
@@ -914,9 +982,12 @@ void oceanWave3D::setUpTwoWayCoupling()
 	dir = _dir;
 	ftype = _ftype;
 	XorYorC = _XorYorC;
+	domainNrS = _domainNrS;
+	RorCS = _RorCS;
+	BBoxS = _BBoxS;
 	
 	//JK: set up coupling in OceanWave3D and get gridpoints inside OpenFOAM Domain	
-	preprocessofdomains_(&nDomains, RorC, BBoxD, &nRelax, domainNr, BBoxR, param, dir, ftype, XorYorC);
+	preprocessofdomains_(&nDomains, RorC, BBoxD, &nRelax, domainNr, BBoxR, param, dir, ftype, XorYorC, &nStruc, domainNrS, RorCS, BBoxS);
 	preprocessofpoints_();
 
 	for(int i=0; i<__globalvariables_MOD_nofpoints; i++)

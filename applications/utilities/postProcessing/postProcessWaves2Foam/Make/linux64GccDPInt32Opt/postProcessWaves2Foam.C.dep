@@ -401,7 +401,7 @@ $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/slicedVolFieldsFwd.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/slicedSurfaceFieldsFwd.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvMeshTemplates.C \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvPatchFvMeshTemplates.C \
-/home/rn7/OpenFOAM/rn7-4.1/applications/utilities/2-way-coupling/src/waves2FoamProcessing/lnInclude/postProcessingWaves.H \
+/home/rn1/OpenFOAM/rn1-4.1/applications/utilities/2-way-coupling/src/waves2FoamProcessing/lnInclude/postProcessingWaves.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvCFD.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvc.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fv.H \

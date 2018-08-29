@@ -723,6 +723,6 @@ $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/timeSelector.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRanges.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRange.H \
 lnInclude/pointDistributions.H \
-/home/rn7/OpenFOAM/rn7-4.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/crossVersionCompatibility.H \
+/home/rn1/OpenFOAM/rn1-4.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/crossVersionCompatibility.H \
 
 

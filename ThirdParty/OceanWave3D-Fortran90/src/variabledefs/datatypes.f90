@@ -247,11 +247,18 @@ END TYPE Wavefield_FS
 
 
 
+!JK: Datatype for structures in the OpenFOAM domain used for 2-way coupling
+TYPE Structure
+	CHARACTER 					   :: RorC			 ! Specifier wheter the structure is rectangular or Cylindrical
+	REAL(KIND=long)                :: BBox(4)        ! Bounding Box, if rectangular: [xmin xmax ymin ymax]  if cylindrical [xCenter yCenter Radius 0]
+END TYPE Structure
+
 !JK: Datatype for OpenFOAM domain used for 2-way coupling
 TYPE OfDomain
 	CHARACTER 					   :: RorC			 ! Specifier wheter the OF domain is rectangular or Cylindrical
 	REAL(KIND=long)                :: BBox(4)        ! Bounding Box, if rectangular: [xmin xmax ymin ymax]  if cylindrical [xCenter yCenter Radius 0]
 	TYPE (RelaxZone), DIMENSION(:), ALLOCATABLE :: RelaxZones !Dynamic array of relaxation zones
+	TYPE (Structure), DIMENSION(:), ALLOCATABLE :: Structures !Dynamic array of structures
 END TYPE OfDomain
 
 !JK: Datatype for index of all points inside the OpenFOAM domain with corrisponding gamma value
@@ -261,6 +268,5 @@ TYPE OfPoint
 	REAL(KIND=long)         :: relax		!Relaxation value
 	INTEGER					:: domainNr		!Number of OpenFOAM domain the Point belongs to
 END TYPE OfPoint
-
 
 END MODULE

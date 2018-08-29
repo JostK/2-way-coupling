@@ -6,7 +6,7 @@ SUBROUTINE PreprocessOfPoints
 USE GlobalVariables
 USE Constants
 IMPLICIT NONE
-INTEGER :: i, j, k, l, m, n, p 
+INTEGER :: i, j, k, l, m, n, o, p, q
 INTEGER	:: nOfDomains
 !Introduce Function return Types
 LOGICAL isInBox
@@ -21,9 +21,16 @@ DO i=1, nOfDomains
 	DO j = 1, FineGrid%Nx+2*GhostGridX
 		DO 	k = 1, FineGrid%Ny+2*GhostGridY	
 			IF (isInBox(j, k, OfDomains(i)%BBox, OfDomains(i)%RorC)) THEN
-			
-				m = m + 1
-			
+				!make sure the point is not inside one of the structures
+				q = 1
+				DO 	o = 1, size( OfDomains(i)%Structures )
+					IF (isInBox(j, k, OfDomains(i)%Structures(o)%BBox, OfDomains(i)%Structures(o)%RorC)) THEN
+						q = 0
+					END IF
+				END DO
+				
+				m = m + q
+				
 			END IF
 		END DO
 	END DO
@@ -57,26 +64,35 @@ DO i=1, nOfDomains
 	DO j = 1, FineGrid%Nx+2*GhostGridX
 		DO 	k = 1, FineGrid%Ny+2*GhostGridY	
 			IF (isInBox(j, k, OfDomains(i)%BBox, OfDomains(i)%RorC)) THEN
-			
-				n = n + 1
-				
-				OfPoints(n)%domainNr = i
-				OfPoints(n)%xInd = j
-				OfPoints(n)%yInd = k
-				OfPoints(n)%relax = one
-				
-				!write x and y position of the Points into an Array for OpenFOAM
-				xOfPoints(n) = FineGrid%x(j,k)
-				yOfPoints(n) = FineGrid%y(j,k)
-				
-				DO l=1, SIZE (OfDomains(i)%RelaxZones)
-				!check if Points are in one of the OF-Domains relaxation zones	
-					IF (isInBox(j, k, OfDomains(i)%RelaxZones(l)%BBox, OfDomains(i)%RelaxZones(l)%XorY)) THEN
-						OfPoints(n)%relax = one - getRelax(j, k, OfDomains(i)%RelaxZones(l)) 
-						!Note definition of relax is contrary to OCW3D relaxation zones -> 1 means OpenFOAM solution is strongly imposed
+				!make sure the point is not inside one of the structures
+				q = 1
+				DO 	o = 1, size( OfDomains(i)%Structures )
+					IF (isInBox(j, k, OfDomains(i)%Structures(o)%BBox, OfDomains(i)%Structures(o)%RorC)) THEN
+						q = 0
 					END IF
-					
 				END DO
+				
+				IF (q ==1) THEN
+					n = n + 1
+					
+					OfPoints(n)%domainNr = i
+					OfPoints(n)%xInd = j
+					OfPoints(n)%yInd = k
+					OfPoints(n)%relax = one
+					
+					!write x and y position of the Points into an Array for OpenFOAM
+					xOfPoints(n) = FineGrid%x(j,k)
+					yOfPoints(n) = FineGrid%y(j,k)
+					
+					DO l=1, SIZE (OfDomains(i)%RelaxZones)
+					!check if Points are in one of the OF-Domains relaxation zones	
+						IF (isInBox(j, k, OfDomains(i)%RelaxZones(l)%BBox, OfDomains(i)%RelaxZones(l)%XorY)) THEN
+							OfPoints(n)%relax = one - getRelax(j, k, OfDomains(i)%RelaxZones(l)) 
+							!Note definition of relax is contrary to OCW3D relaxation zones -> 1 means OpenFOAM solution is strongly imposed
+						END IF
+						
+					END DO
+				END IF
 			END IF
 		END DO
 	END DO

@@ -726,7 +726,7 @@ $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/scalarRange.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/complex.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/complexI.H \
 lnInclude/rawAlphaProbes.H \
-/home/rn7/OpenFOAM/rn7-4.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/crossVersionCompatibility.H \
+/home/rn1/OpenFOAM/rn1-4.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/crossVersionCompatibility.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/addToRunTimeSelectionTable.H \
 
 

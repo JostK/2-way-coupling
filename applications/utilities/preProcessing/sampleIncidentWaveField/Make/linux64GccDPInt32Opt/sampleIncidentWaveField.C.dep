@@ -508,8 +508,8 @@ $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/OFstream.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/uniformDimensionedFields.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/UniformDimensionedField.H \
 $(WM_PROJECT_DIR)/src/OpenFOAM/lnInclude/UniformDimensionedField.C \
-/home/rn7/OpenFOAM/rn7-4.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/waveTheory.H \
-/home/rn7/OpenFOAM/rn7-4.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/crossVersionCompatibility.H \
+/home/rn1/OpenFOAM/rn1-4.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/waveTheory.H \
+/home/rn1/OpenFOAM/rn1-4.1/applications/utilities/2-way-coupling/src/waves2Foam/lnInclude/crossVersionCompatibility.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvCFD.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fvc.H \
 $(WM_PROJECT_DIR)/src/finiteVolume/lnInclude/fv.H \

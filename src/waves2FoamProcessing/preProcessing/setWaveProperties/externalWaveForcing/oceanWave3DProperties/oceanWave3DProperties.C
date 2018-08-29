@@ -101,42 +101,89 @@ void oceanWave3DProperties::set( Ostream& os )
     //
     //JK: Write information for two way coupling
     //
-    
-    os << endl;
-    
-    // Set coupling type
-	writeGiven(os, "couplingType");
-	
-	wordList domainNames=dict_.lookup("domainNames");
-	writeGiven(os, "domainNames");		
-	
-	writeGiven(os, "OCWrelaxationFuction");
-	writeGiven(os, "OCWrelaxationParam");
-	
-	writeGiven(os, "maxWaveHeight");
-	
-	forAll (domainNames, domaini)
-	{
-		word dm(domainNames[domaini]);
 		
-		os << nl << indent << dm << "Coeffs" << nl;
+		os << endl;
 		
-        os << indent << token::BEGIN_BLOCK
-           << incrIndent << nl;
+		// Set coupling type
+		writeGiven(os, "couplingType");
+		
+		wordList domainNames=dict_.lookup("domainNames");
+		writeGiven(os, "domainNames");		
+		
+		writeGiven(os, "OCWrelaxationFuction");
+		writeGiven(os, "OCWrelaxationParam");
+		
+		writeGiven(os, "maxWaveHeight");
+		
+		forAll (domainNames, domaini)
+		{
+			word dm(domainNames[domaini]);
+			
+			os << nl << indent << dm << "Coeffs" << nl;
+			
+			os << indent << token::BEGIN_BLOCK
+			   << incrIndent << nl;
 
-        dictionary sd( dict_.subDict(dm + "Coeffs") );
+			dictionary sd( dict_.subDict(dm + "Coeffs") );
+			
+			ITstream domainShapeIT( sd.lookup("domainShape"));
+			addITstream( os, "domainShape", domainShapeIT );
+			word domainShape(sd.lookup("domainShape"));
+			if (domainShape == "Rectangular")
+			{
+				ITstream startX( sd.lookup("startX"));
+				addITstream( os, "startX", startX );
+				
+				ITstream endX( sd.lookup("endX"));
+				addITstream( os, "endX", endX );
+			}
+			else if (domainShape == "Cylindrical")
+			{
+				ITstream centre( sd.lookup("centre"));
+				addITstream( os, "centre", centre );
+				
+				ITstream radius( sd.lookup("radius"));
+				addITstream( os, "radius", radius );
+			}
+			else
+			{
+				FatalErrorIn("oceanWave3DProperties::set()")
+				<< "domainShape " << domainShape << " unknown." 
+				<< "domainShape must be Rectangular or Cylindrical"
+				<< exit(FatalError) << endl << endl;
+			}	
+			
+			ITstream relaxationNames( sd.lookup("relaxationNames"));
+			addITstream( os, "relaxationNames", relaxationNames );	
+			
+			ITstream structureNamesIT( sd.lookup("structureNames"));
+			addITstream( os, "structureNames", structureNamesIT );			
+			wordList structureNames=sd.lookup("structureNames");
+			
+			forAll (structureNames, structi)
+			{
+				word str(structureNames[structi]);
+				
+				os << nl << indent << str << "Coeffs" << nl;
+				
+				os << indent << token::BEGIN_BLOCK
+				   << incrIndent << nl;
 
-        wordList toc( sd.toc() );
+				dictionary ssd( sd.subDict(str + "Coeffs") );
 
-        forAll (toc, item)
-        {
-            ITstream it( sd.lookup(toc[item]) );
+				wordList tocS( ssd.toc() );
 
-            addITstream( os, toc[item], it );
-        }
+				forAll (tocS, item)
+				{
+					ITstream it( ssd.lookup(tocS[item]) );
 
-        os << decrIndent << indent << token::END_BLOCK << endl;
-    }
+					addITstream( os, tocS[item], it );
+				}
+
+				os << decrIndent << indent << token::END_BLOCK << endl;
+			}
+			os << decrIndent << indent << token::END_BLOCK << endl;
+		}
 	    
 	   
     // Write the closing bracket

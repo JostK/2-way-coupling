@@ -25,3 +25,5 @@ change: commented out coupling functions so that only Eta is coupled
 change: added initial solution of laplace equation to Runge_Kutta_4
 change: added debug writing in main/OceanWave3DTakeATimestep
 change: do not set velocities outside the watercollum to zero but mirror about free surface plane in OpenFoamNearestNeighbour.f90
+change: added structures to preprocessOfDomains
+change: added structures to OfDomains in datatypes
